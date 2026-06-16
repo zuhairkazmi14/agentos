@@ -1,0 +1,640 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--accent:#534AB7;--accent-light:#EEEDFE;--accent-dark:#26215C;--teal:#0F6E56;--teal-light:#E1F5EE;--coral:#993C1D;--coral-light:#FAECE7;--amber:#854F0B;--amber-light:#FAEEDA}
+body{font-family:var(--font-sans)}
+.wrap{max-width:680px;padding:1.5rem 0}
+.nav{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:2rem}
+.nav button{font-size:11px;font-weight:500;padding:4px 10px;border-radius:var(--border-radius-md);background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);color:var(--color-text-secondary);cursor:pointer;transition:all .15s}
+.nav button.active,.nav button:hover{background:#EEEDFE;color:#3C3489;border-color:#AFA9EC}
+.page{display:none}
+.page.active{display:block}
+h1{font-size:22px;font-weight:500;color:var(--color-text-primary);margin-bottom:4px}
+.eyebrow{font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:.08em;color:var(--color-text-tertiary);margin-bottom:6px}
+h2{font-size:18px;font-weight:500;color:var(--color-text-primary);margin-bottom:1rem}
+h3{font-size:15px;font-weight:500;color:var(--color-text-primary);margin:.75rem 0 .35rem}
+p{font-size:14px;color:var(--color-text-secondary);line-height:1.7;margin-bottom:.65rem}
+ul,ol{padding-left:1.25rem;margin-bottom:.75rem}
+li{font-size:14px;color:var(--color-text-secondary);line-height:1.7;margin-bottom:2px}
+.card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:1rem 1.25rem;margin-bottom:10px}
+.card.accent{border-left:3px solid var(--accent);border-radius:0 var(--border-radius-md) var(--border-radius-md) 0}
+.card.teal{border-left:3px solid var(--teal);border-radius:0 var(--border-radius-md) var(--border-radius-md) 0}
+.card.coral{border-left:3px solid var(--coral);border-radius:0 var(--border-radius-md) var(--border-radius-md) 0}
+.card.amber{border-left:3px solid #EF9F27;border-radius:0 var(--border-radius-md) var(--border-radius-md) 0}
+.badge{display:inline-block;font-size:11px;font-weight:500;padding:2px 8px;border-radius:var(--border-radius-md);margin-right:4px;margin-bottom:3px}
+.badge-p{background:#EEEDFE;color:#3C3489}
+.badge-t{background:#E1F5EE;color:#085041}
+.badge-a{background:#FAEEDA;color:#633806}
+.badge-r{background:#FCEBEB;color:#791F1F}
+.badge-g{background:#EAF3DE;color:#27500A}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:1rem}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:1rem}
+.metric{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:.75rem 1rem}
+.metric-label{font-size:12px;color:var(--color-text-secondary);margin-bottom:4px}
+.metric-val{font-size:22px;font-weight:500;color:var(--color-text-primary)}
+.score-row{display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:.5px solid var(--color-border-tertiary)}
+.score-row:last-child{border-bottom:none}
+.score-name{font-size:13px;color:var(--color-text-primary);flex:1}
+.score-before{font-size:12px;color:#A32D2D;min-width:36px;text-align:center}
+.score-arrow{font-size:12px;color:var(--color-text-tertiary)}
+.score-after{font-size:12px;font-weight:500;color:#0F6E56;min-width:36px;text-align:center}
+.dots{display:flex;gap:3px}
+.dot{width:9px;height:9px;border-radius:50%}
+.timeline-item{display:flex;gap:12px;padding:10px 0;border-bottom:.5px solid var(--color-border-tertiary)}
+.timeline-item:last-child{border-bottom:none}
+.tl-num{min-width:28px;height:28px;border-radius:50%;background:#EEEDFE;color:#3C3489;font-size:12px;font-weight:500;display:flex;align-items:center;justify-content:center;margin-top:1px;flex-shrink:0}
+.tl-content h3{margin-top:0;margin-bottom:4px}
+.sep{height:.5px;background:var(--color-border-tertiary);margin:1.25rem 0}
+.arch-layer{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:.65rem 1rem;margin-bottom:6px}
+.arch-label{font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:.07em;color:var(--color-text-tertiary);margin-bottom:4px}
+.chips{display:flex;flex-wrap:wrap;gap:5px}
+.chip{font-size:12px;background:var(--color-background-primary);border:.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);padding:3px 8px;color:var(--color-text-secondary)}
+.moat-row{display:flex;gap:10px;padding:9px 0;border-bottom:.5px solid var(--color-border-tertiary)}
+.moat-row:last-child{border-bottom:none}
+.moat-icon{font-size:18px;width:28px;flex-shrink:0;color:var(--color-text-secondary)}
+.moat-body h3{margin-top:0;margin-bottom:2px}
+.pill-big{display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border-radius:999px;font-size:13px;font-weight:500;margin-bottom:8px}
+.pill-purple{background:#EEEDFE;color:#3C3489}
+.pill-green{background:#EAF3DE;color:#27500A}
+.callout{background:var(--color-background-secondary);border-radius:var(--border-radius-lg);padding:1rem 1.25rem;margin-bottom:1rem}
+.callout-title{font-size:13px;font-weight:500;color:var(--color-text-primary);margin-bottom:6px}
+table{width:100%;border-collapse:collapse;font-size:13px;margin-bottom:1rem}
+th{font-weight:500;font-size:12px;text-align:left;color:var(--color-text-secondary);padding:6px 8px;border-bottom:.5px solid var(--color-border-tertiary)}
+td{padding:7px 8px;border-bottom:.5px solid var(--color-border-tertiary);color:var(--color-text-secondary);vertical-align:top}
+td:first-child{color:var(--color-text-primary);font-weight:500;white-space:nowrap}
+.final-box{border:2px solid #534AB7;border-radius:var(--border-radius-lg);padding:1.25rem 1.5rem}
+.final-number{font-size:42px;font-weight:500;color:#534AB7;line-height:1}
+.progress-bar{height:6px;background:var(--color-background-secondary);border-radius:3px;margin:4px 0 10px}
+.progress-fill{height:6px;border-radius:3px}
+</style>
+
+<div class="wrap">
+<h2 class="sr-only">AgentOS 10/10 upgrade plan across vision, product, architecture, GTM, business model, security, team, and investor narrative</h2>
+
+<div class="eyebrow">AgentOS upgrade playbook</div>
+<h1>From 3/10 to 10/10 — every dimension</h1>
+<p style="margin-bottom:1.5rem;font-size:14px;color:var(--color-text-secondary)">Each section below takes a specific weakness identified in the teardown and converts it into a concrete, buildable upgrade. Navigate by dimension.</p>
+
+<div class="nav">
+  <button class="active" onclick="show('vision')">Vision</button>
+  <button onclick="show('product')">Product</button>
+  <button onclick="show('architecture')">Architecture</button>
+  <button onclick="show('business')">Business model</button>
+  <button onclick="show('gtm')">Go-to-market</button>
+  <button onclick="show('security')">Security</button>
+  <button onclick="show('team')">Team</button>
+  <button onclick="show('mvp')">MVP</button>
+  <button onclick="show('investor')">Investor</button>
+  <button onclick="show('scorecard')">Scorecard</button>
+</div>
+
+<!-- VISION -->
+<div id="vision" class="page active">
+  <div class="eyebrow">Dimension 01</div>
+  <h2>Vision — from concept to category claim</h2>
+  <div class="card coral">
+    <h3 style="margin-top:0">The original problem</h3>
+    <p style="margin-bottom:0">The vision was beautiful but unownable. "AI-native OS" is aspirational but undefended — anyone can say it. There was no proof that multi-agent is better than single-agent, no unique insight about why now, and no crisp answer to "why can't OpenAI just build this?"</p>
+  </div>
+  <div class="card teal">
+    <h3 style="margin-top:0">The upgraded vision: own the kernel layer</h3>
+    <p>The insight nobody has said clearly yet: <em>model providers are vertically integrated toward the end-user and will never build a neutral orchestration kernel</em>. OpenAI Operator works for OpenAI models. Claude Computer Use works for Anthropic models. Google Mariner works for Gemini.</p>
+    <p style="margin-bottom:0">AgentOS is the <strong style="color:#085041">model-neutral runtime</strong> — the layer underneath every agent, regardless of who made the model. Like Linux vs Windows Server: the kernel doesn't care who made the application. This framing is defensible, accurate, and positions AgentOS as infrastructure rather than a product competing on features.</p>
+  </div>
+
+  <h3>The one-sentence pitch (rewritten)</h3>
+  <div class="callout">
+    <div class="callout-title">Before (unownable)</div>
+    <p style="margin-bottom:0;font-style:italic">"AgentOS is an AI-native operating environment that makes your computer behave like an intelligent workforce."</p>
+  </div>
+  <div class="callout">
+    <div class="callout-title">After (category-defining)</div>
+    <p style="margin-bottom:0;font-style:italic">"AgentOS is the model-neutral agent kernel for desktop — the operating layer that lets any AI model control any computer, at any cost, without vendor lock-in."</p>
+  </div>
+
+  <h3>Three strategic pillars that replace the wishlist</h3>
+  <div class="card accent">
+    <span class="badge badge-p">Pillar 1</span>
+    <h3 style="margin-top:6px">Local-first execution</h3>
+    <p style="margin-bottom:0">Privacy and cost control no cloud-native competitor can match. Local models via Ollama, local memory, local execution. Enterprise CISO approves in 30 minutes because nothing leaves the machine. This is structurally impossible for OpenAI Operator.</p>
+  </div>
+  <div class="card accent">
+    <span class="badge badge-p">Pillar 2</span>
+    <h3 style="margin-top:6px">Model neutrality</h3>
+    <p style="margin-bottom:0">One workspace. Six different model providers. Route each task to the cheapest/best model for that task type. No other product does this with a kernel-level scheduler. This is the Kubernetes of AI agents.</p>
+  </div>
+  <div class="card accent">
+    <span class="badge badge-p">Pillar 3</span>
+    <h3 style="margin-top:6px">Developer ecosystem</h3>
+    <p style="margin-bottom:0">Open kernel API from day one. Third-party agent packs are the equivalent of VS Code extensions. Network effects compound. Model providers cannot replicate this without alienating their developer base.</p>
+  </div>
+
+  <h3>The one thing that makes this defensible</h3>
+  <div class="card teal">
+    <p style="margin-bottom:0">The <strong style="color:#085041">Agent Pack ecosystem</strong> is the moat. When 500 developers have published packs for AgentOS, switching costs are real. Build the ecosystem before the model providers notice it matters. Target: 100 published packs before Series A.</p>
+  </div>
+</div>
+
+<!-- PRODUCT -->
+<div id="product" class="page">
+  <div class="eyebrow">Dimension 02</div>
+  <h2>Product — ruthless scope discipline</h2>
+  <div class="card coral">
+    <h3 style="margin-top:0">The original problem</h3>
+    <p style="margin-bottom:0">The spec described 7 workspaces, 20+ agent types, a marketplace, computer control, custom agent spawning, memory graphs, and motion video agents — simultaneously. This is a 4-year roadmap described as a v1. The result would be: nothing ships, or everything ships half-finished.</p>
+  </div>
+
+  <h3>The three-phase product architecture</h3>
+
+  <div class="timeline-item">
+    <div class="tl-num">1</div>
+    <div class="tl-content">
+      <h3>Phase 1 — Kernel (months 1–4, ship this)</h3>
+      <p>Development Workspace only. Four agents: Architect, Backend, Frontend, QA. Visual panel showing agent communication in real time. Local model support. Real-time cost display. User pastes a spec, agents produce working code. Nothing else.</p>
+      <span class="badge badge-t">Dev workspace</span>
+      <span class="badge badge-t">4 core agents</span>
+      <span class="badge badge-t">Local + cloud models</span>
+      <span class="badge badge-t">Cost display</span>
+    </div>
+  </div>
+  <div class="timeline-item">
+    <div class="tl-num">2</div>
+    <div class="tl-content">
+      <h3>Phase 2 — Ecosystem (months 5–9)</h3>
+      <p>Open the Agent Pack API. Seed marketplace with 10 hand-built packs (Research, Design, Writing, Finance, etc.). Add browser automation via Playwright. Add memory layer (conversation history first, then vector DB). Add two more workspaces based on which power users are paying most for.</p>
+      <span class="badge badge-p">Agent Pack API</span>
+      <span class="badge badge-p">Browser automation</span>
+      <span class="badge badge-p">Memory v1</span>
+      <span class="badge badge-p">Marketplace</span>
+    </div>
+  </div>
+  <div class="timeline-item">
+    <div class="tl-num">3</div>
+    <div class="tl-content">
+      <h3>Phase 3 — Platform (months 10–18)</h3>
+      <p>Full OS metaphor with all workspaces. Agent-to-agent delegation. Full computer control (filesystem, native apps, email). Enterprise SSO. SOC2. Team accounts. Audit logs. This is when the OS vision becomes real — but only after proving the kernel works.</p>
+      <span class="badge badge-a">Full OS UI</span>
+      <span class="badge badge-a">Enterprise features</span>
+      <span class="badge badge-a">Native app control</span>
+      <span class="badge badge-a">Team accounts</span>
+    </div>
+  </div>
+
+  <div class="sep"></div>
+  <h3>What to remove from the spec permanently</h3>
+  <div class="card coral">
+    <ul>
+      <li><strong>Motion/Video agents</strong> — outputs are embarrassing, expectations are impossible to meet today</li>
+      <li><strong>Agent "personalities"</strong> as a property system — this is a system prompt, not an architecture</li>
+      <li><strong>Memory Graphs as a UI element</strong> — confusing to non-technical users, a distraction from outcomes</li>
+      <li><strong>Spawning unlimited subagents</strong> — exponential cost blowup, no ceiling, bad UX</li>
+      <li><strong>Custom agent creation without coding</strong> in v1 — build the presets well first</li>
+    </ul>
+  </div>
+
+  <h3>The one UX principle that changes everything</h3>
+  <div class="card teal">
+    <p style="margin-bottom:0">Every screen must answer: "what is happening right now, what did it cost, and what should I do next?" Agent UX that doesn't answer these three questions in 3 seconds will be abandoned. Every tab, every panel, every agent card must be designed around this triad — not around the agent's internal state.</p>
+  </div>
+</div>
+
+<!-- ARCHITECTURE -->
+<div id="architecture" class="page">
+  <div class="eyebrow">Dimension 03</div>
+  <h2>Architecture — production-grade from day one</h2>
+  <div class="card coral">
+    <h3 style="margin-top:0">The original problem</h3>
+    <p style="margin-bottom:0">The spec described the Agent Kernel without specifying the language, the concurrency model, the failure recovery strategy, the IPC mechanism, or the sandboxing approach. "Central orchestration system" is not an architecture. Python async loops will collapse under production load on a desktop. Computer control on heterogeneous hardware is not mentioned as hard.</p>
+  </div>
+
+  <h3>Mandatory technology decisions</h3>
+
+  <div class="arch-layer">
+    <div class="arch-label">Agent kernel process — write in Rust</div>
+    <div class="chips">
+      <span class="chip">Tokio async runtime</span>
+      <span class="chip">Actor model (Actix)</span>
+      <span class="chip">Message passing, no shared state</span>
+      <span class="chip">Graceful agent death + restart</span>
+      <span class="chip">Resource quotas per agent</span>
+    </div>
+    <p style="margin-top:6px;font-size:12px;color:var(--color-text-tertiary)">Why Rust: Python async fails under CPU contention on desktop. Rust gives you zero-cost concurrency, OS thread control, and memory safety without a GC pausing at the worst moment.</p>
+  </div>
+  <div class="arch-layer">
+    <div class="arch-label">Desktop shell — Tauri (not Electron)</div>
+    <div class="chips">
+      <span class="chip">React frontend</span>
+      <span class="chip">WebSocket to Rust kernel</span>
+      <span class="chip">OS keychain for secrets</span>
+      <span class="chip">React Flow for visual builder</span>
+      <span class="chip">30MB binary vs 200MB Electron</span>
+    </div>
+    <p style="margin-top:6px;font-size:12px;color:var(--color-text-tertiary)">Tauri uses the system WebView — faster startup, smaller bundle, better OS integration. Critical for security: native keychain access, OS-level sandboxing.</p>
+  </div>
+  <div class="arch-layer">
+    <div class="arch-label">Memory system — three explicit tiers</div>
+    <div class="chips">
+      <span class="chip">T1: In-context (conversation window)</span>
+      <span class="chip">T2: Session (LanceDB local vector)</span>
+      <span class="chip">T3: Long-term (SQLite structured)</span>
+      <span class="chip">ACL: per-agent read/write scopes</span>
+      <span class="chip">Source tagging: trusted vs untrusted</span>
+    </div>
+    <p style="margin-top:6px;font-size:12px;color:var(--color-text-tertiary)">Every memory entry carries: source URL/agent, trust level, timestamp, and a content hash. Untrusted content (web scrapes) cannot be promoted to T3 without explicit user confirmation.</p>
+  </div>
+  <div class="arch-layer">
+    <div class="arch-label">Computer control — staged rollout</div>
+    <div class="chips">
+      <span class="chip">Stage 1: Playwright (browser only)</span>
+      <span class="chip">Stage 2: Filesystem with path allowlist</span>
+      <span class="chip">Stage 3: Terminal with command allowlist</span>
+      <span class="chip">Stage 4: Native apps via accessibility API</span>
+      <span class="chip">Dry-run mode for all destructive ops</span>
+    </div>
+    <p style="margin-top:6px;font-size:12px;color:var(--color-text-tertiary)">Never ship all four stages simultaneously. Browser automation (Stage 1) alone is a shippable product. Each new stage adds attack surface and fragility — earn the right to add it.</p>
+  </div>
+  <div class="arch-layer">
+    <div class="arch-label">Plugin sandbox — WASM mandatory</div>
+    <div class="chips">
+      <span class="chip">Wasmtime runtime</span>
+      <span class="chip">Capability manifest (network egress allowlist)</span>
+      <span class="chip">Code signing required</span>
+      <span class="chip">No plugin gets filesystem access by default</span>
+      <span class="chip">API rate limit per plugin</span>
+    </div>
+    <p style="margin-top:6px;font-size:12px;color:var(--color-text-tertiary)">Every Agent Pack runs in WASM. It cannot access memory it wasn't given. It cannot open network connections not declared in its manifest. This is non-negotiable for a marketplace.</p>
+  </div>
+  <div class="arch-layer">
+    <div class="arch-label">Model routing engine</div>
+    <div class="chips">
+      <span class="chip">Task classifier (local, fast, tiny model)</span>
+      <span class="chip">Route by: complexity, cost ceiling, privacy flag</span>
+      <span class="chip">Fallback chain: cloud → local → error</span>
+      <span class="chip">Latency SLO per task type</span>
+      <span class="chip">Cost ceiling per workspace per day</span>
+    </div>
+  </div>
+
+  <h3>The hardest engineering problem nobody is talking about</h3>
+  <div class="card amber">
+    <p style="margin-bottom:0">Agent-to-agent communication consistency. When Agent A tells Agent B to do something and B fails halfway through, who owns recovery? What is the rollback? What does the user see? You need a distributed transaction protocol between agents — think two-phase commit but for LLM calls. Nobody has designed this cleanly. Doing it well is your technical moat.</p>
+  </div>
+</div>
+
+<!-- BUSINESS -->
+<div id="business" class="page">
+  <div class="eyebrow">Dimension 04</div>
+  <h2>Business model — pricing that survives reality</h2>
+  <div class="card coral">
+    <h3 style="margin-top:0">The original problem</h3>
+    <p style="margin-bottom:0">No pricing model was defined. Multi-agent runs cost $0.50–$5 each. A flat $50/month subscription at 20 tasks/day per power user = $40/day in API costs against $1.67/day revenue. That is a company-destroying unit economics problem hiding behind a product vision.</p>
+  </div>
+
+  <h3>The correct pricing architecture</h3>
+
+  <div class="grid2">
+    <div class="card">
+      <span class="badge badge-t">Tier 1 — Hobby</span>
+      <div style="font-size:20px;font-weight:500;color:var(--color-text-primary);margin:6px 0">Free</div>
+      <ul style="margin-bottom:0">
+        <li>BYOK only (bring your own API keys)</li>
+        <li>1 workspace</li>
+        <li>Local models unlimited</li>
+        <li>Community packs</li>
+        <li>No AgentOS cloud costs — ever</li>
+      </ul>
+    </div>
+    <div class="card" style="border:2px solid var(--accent)">
+      <span class="badge badge-p">Tier 2 — Pro</span>
+      <div style="font-size:20px;font-weight:500;color:#534AB7;margin:6px 0">$29/month</div>
+      <ul style="margin-bottom:0">
+        <li>BYOK or AgentOS-managed keys</li>
+        <li>All workspaces</li>
+        <li>Priority model routing</li>
+        <li>Memory persistence</li>
+        <li>Full marketplace</li>
+        <li>$20 AgentOS API credit included</li>
+      </ul>
+    </div>
+  </div>
+  <div class="grid2">
+    <div class="card">
+      <span class="badge badge-a">Tier 3 — Team</span>
+      <div style="font-size:20px;font-weight:500;color:var(--color-text-primary);margin:6px 0">$19/seat/mo</div>
+      <ul style="margin-bottom:0">
+        <li>Shared workspaces</li>
+        <li>Shared memory pools</li>
+        <li>Admin console</li>
+        <li>SSO</li>
+        <li>Usage dashboard</li>
+        <li>Pooled API credit: $15/seat</li>
+      </ul>
+    </div>
+    <div class="card">
+      <span class="badge badge-r">Tier 4 — Enterprise</span>
+      <div style="font-size:20px;font-weight:500;color:var(--color-text-primary);margin:6px 0">Custom</div>
+      <ul style="margin-bottom:0">
+        <li>On-premise deployment</li>
+        <li>Air-gapped (local models only)</li>
+        <li>SOC2 Type II</li>
+        <li>Custom agent packs</li>
+        <li>Dedicated support</li>
+        <li>SLA</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card teal">
+    <h3 style="margin-top:0">The key insight: BYOK as default</h3>
+    <p style="margin-bottom:0">The free tier uses only the user's own API keys — AgentOS incurs zero compute cost. This means you can have thousands of free users at no marginal cost. The value you provide is the orchestration kernel, the UX, and the ecosystem — not the tokens. This also eliminates the unit economics death spiral. When you do offer managed keys (Pro tier), you resell tokens at a small markup (~15%) — predictable, scalable, never upside-down.</p>
+  </div>
+
+  <h3>Revenue streams beyond subscriptions</h3>
+  <div class="grid3">
+    <div class="metric"><div class="metric-label">Marketplace cut</div><div class="metric-val" style="font-size:18px">20%</div><p style="font-size:12px;color:var(--color-text-tertiary);margin-top:4px">Revenue share on paid Agent Packs. App Store model.</p></div>
+    <div class="metric"><div class="metric-label">Token resale margin</div><div class="metric-val" style="font-size:18px">15%</div><p style="font-size:12px;color:var(--color-text-tertiary);margin-top:4px">Managed API keys for Pro/Team tiers. Volume discounts from providers.</p></div>
+    <div class="metric"><div class="metric-label">Enterprise ACV</div><div class="metric-val" style="font-size:18px">$60k+</div><p style="font-size:12px;color:var(--color-text-tertiary);margin-top:4px">On-premise + support contracts. Single deal = 6 months of SMB revenue.</p></div>
+  </div>
+</div>
+
+<!-- GTM -->
+<div id="gtm" class="page">
+  <div class="eyebrow">Dimension 05</div>
+  <h2>Go-to-market — the developer flywheel</h2>
+  <div class="card coral">
+    <h3 style="margin-top:0">The original problem</h3>
+    <p style="margin-bottom:0">The GTM plan was generic: Product Hunt, Twitter, Discord. No differentiated entry strategy, no viral mechanic, no developer acquisition engine, and no answer to why a developer would choose AgentOS over installing crewai and writing 20 lines of Python.</p>
+  </div>
+
+  <h3>The flywheel: developer ecosystem → user pull</h3>
+  <div class="card accent">
+    <p style="margin-bottom:6px">The model that works: VS Code did not win by being a better text editor. It won by having the best extension ecosystem. You follow the same pattern:</p>
+    <ol>
+      <li>Ship an exceptional kernel with a beautiful developer API</li>
+      <li>Personally recruit 20 developers to build the first 20 Agent Packs</li>
+      <li>Make those packs genuinely useful (Research Pack, Data Analysis Pack, etc.)</li>
+      <li>Power users discover packs → share workflows on Twitter → organic growth</li>
+      <li>Developer count grows → pack quality rises → user switching cost rises</li>
+    </ol>
+  </div>
+
+  <h3>Acquisition by phase</h3>
+  <div class="timeline-item">
+    <div class="tl-num" style="background:#EEEDFE;color:#3C3489">100</div>
+    <div class="tl-content">
+      <h3>First 100 users — do things that don't scale</h3>
+      <p style="margin-bottom:4px">DM 200 indie hackers on Twitter who post about AI workflows. Offer lifetime Pro tier in exchange for public feedback. Host two live demos on YouTube showing a real codebase being built by the agent team. Do not launch publicly yet. Learn from these 100 people for 6 weeks.</p>
+      <span class="badge badge-p">Twitter DMs</span><span class="badge badge-p">YouTube demos</span><span class="badge badge-p">Lifetime deals</span>
+    </div>
+  </div>
+  <div class="timeline-item">
+    <div class="tl-num" style="background:#EEEDFE;color:#3C3489">1k</div>
+    <div class="tl-content">
+      <h3>First 1,000 users — the developer launch</h3>
+      <p style="margin-bottom:4px">Open beta with 10 Agent Packs on day one. Product Hunt launch timed to a Tuesday. One published benchmark proving multi-agent produces better code quality than single-agent GPT-4o on a specific task class. This benchmark is press-friendly and shareable.</p>
+      <span class="badge badge-p">Public beta</span><span class="badge badge-p">Benchmark publish</span><span class="badge badge-p">Product Hunt</span><span class="badge badge-p">10 agent packs</span>
+    </div>
+  </div>
+  <div class="timeline-item">
+    <div class="tl-num" style="background:#EEEDFE;color:#3C3489">10k</div>
+    <div class="tl-content">
+      <h3>First 10,000 users — ecosystem momentum</h3>
+      <p style="margin-bottom:4px">Marketplace with 100+ packs. Agency partnership program (5 agencies get co-marketing in exchange for publishing packs). Integration with GitHub, Linear, Notion. Press in The Information, TechCrunch. First enterprise pilot.</p>
+      <span class="badge badge-p">100+ packs</span><span class="badge badge-p">Agency partners</span><span class="badge badge-p">GitHub integration</span><span class="badge badge-p">Press</span>
+    </div>
+  </div>
+
+  <h3>The one content play that multiplies everything</h3>
+  <div class="card teal">
+    <p style="margin-bottom:0">Publish weekly "Agent Runs" — real recordings of an agent team completing a professional task, with cost, time, and output quality shown. Format: 3-minute video, no commentary, just the agent working. These are inherently viral among the technical audience. They prove the product. They handle objections. They generate SEO. One recording per week is a full-time content strategy.</p>
+  </div>
+</div>
+
+<!-- SECURITY -->
+<div id="security" class="page">
+  <div class="eyebrow">Dimension 06</div>
+  <h2>Security — the architecture of trust</h2>
+  <div class="card coral">
+    <h3 style="margin-top:0">The original problem</h3>
+    <p style="margin-bottom:0">The spec described agents with filesystem access, terminal access, email access, and browser access — with no mention of how any of these would be sandboxed, audited, or constrained. This is a security nightmare that would produce the first serious AI agent breach incident within 6 months of shipping.</p>
+  </div>
+
+  <h3>Security architecture — non-negotiables before shipping</h3>
+
+  <div class="card accent">
+    <h3 style="margin-top:0"><i class="ti ti-shield" style="font-size:16px;margin-right:6px" aria-hidden="true"></i>Principle of least privilege — enforced at the kernel</h3>
+    <p style="margin-bottom:0">Every agent declares its capability requirements at startup. The kernel grants the minimum required. An agent asking for "filesystem write" must specify the exact path subtree. An agent asking for "network" must specify the hostnames. No blanket capabilities. No capability inheritance from parent to child agent without explicit user approval.</p>
+  </div>
+  <div class="card accent">
+    <h3 style="margin-top:0"><i class="ti ti-lock" style="font-size:16px;margin-right:6px" aria-hidden="true"></i>Prompt injection firewall</h3>
+    <p style="margin-bottom:0">All content read from external sources (web, files, emails) passes through an injection classifier before being inserted into any agent context. The classifier runs locally (small fine-tuned model). Content flagged as potentially adversarial is shown to the user with a warning before being passed to an agent. Never trust content from outside the user's control as instructions.</p>
+  </div>
+  <div class="card accent">
+    <h3 style="margin-top:0"><i class="ti ti-history" style="font-size:16px;margin-right:6px" aria-hidden="true"></i>Immutable action log</h3>
+    <p style="margin-bottom:0">Every action an agent takes — every file write, every terminal command, every API call — is logged to an append-only local log before it executes. Users can audit and replay. Destructive operations (file delete, email send, payment initiation) require a user confirmation step and are highlighted in the log. This is the "undo" mechanic that makes autonomous agents trustworthy.</p>
+  </div>
+  <div class="card accent">
+    <h3 style="margin-top:0"><i class="ti ti-key" style="font-size:16px;margin-right:6px" aria-hidden="true"></i>Secrets never touch disk unencrypted</h3>
+    <p style="margin-bottom:0">API keys, OAuth tokens, and credentials are stored exclusively in the OS keychain (Windows Credential Manager / macOS Keychain / Linux Secret Service). They are decrypted in memory for the duration of a single API call and zeroed afterward. The Agent Kernel has no persistent access to credentials — it requests them per call from the keychain daemon.</p>
+  </div>
+  <div class="card accent">
+    <h3 style="margin-top:0"><i class="ti ti-plug" style="font-size:16px;margin-right:6px" aria-hidden="true"></i>WASM plugin isolation</h3>
+    <p style="margin-bottom:0">All Agent Packs run in Wasmtime. They cannot escape the sandbox. They have no default capabilities. Every capability (network call to a specific host, reading a specific environment variable) must be declared in the pack manifest and approved by the user at install time — similar to Android app permissions. A compromised plugin cannot access other agents' memory, the user's filesystem, or stored credentials.</p>
+  </div>
+
+  <h3>The security advantage vs cloud competitors</h3>
+  <div class="card teal">
+    <p style="margin-bottom:0">Because AgentOS runs locally, you have a security story that no cloud-native competitor can match: <em>your data never leaves your machine</em>. Agents use local models for sensitive tasks. Memory is encrypted at rest on your own disk. The kernel has no external telemetry by default. For any company with a CISO, this is the deciding factor over Manus or Operator.</p>
+  </div>
+</div>
+
+<!-- TEAM -->
+<div id="team" class="page">
+  <div class="eyebrow">Dimension 07</div>
+  <h2>Team — the hiring plan that makes this buildable</h2>
+  <div class="card coral">
+    <h3 style="margin-top:0">The original problem</h3>
+    <p style="margin-bottom:0">The spec said nothing about who would build it. Every investor will ask: "who on the founding team has shipped systems software? Who has built a desktop app at scale? Who has orchestration engineering experience?" Without answers, the vision is unfundable regardless of quality.</p>
+  </div>
+
+  <h3>Founding team — minimum viable composition</h3>
+  <table>
+    <tr><th>Role</th><th>What they own</th><th>Required background</th></tr>
+    <tr><td>CEO / Product</td><td>Vision, GTM, fundraising, user research</td><td>Former PM at a dev tools company, or founder who shipped a product with 10k+ users</td></tr>
+    <tr><td>CTO / Kernel</td><td>Rust kernel, concurrency model, security architecture</td><td>Systems programming background — OS, compilers, or high-performance services. This is the non-negotiable hire.</td></tr>
+    <tr><td>Frontend Lead</td><td>Tauri shell, React UI, visual workflow builder</td><td>Strong React + desktop app experience. Electron/Tauri, WebSocket, real-time UI</td></tr>
+    <tr><td>AI/ML Engineer</td><td>Model routing, prompt engineering, memory layer, injection classifier</td><td>Applied ML at a company that ran models in production. Research background alone is not enough.</td></tr>
+  </table>
+
+  <div class="card amber">
+    <h3 style="margin-top:0">The one hire that changes investor perception most</h3>
+    <p style="margin-bottom:0">A CTO who has shipped systems software at scale — someone who has written a kernel, a compiler, a game engine, or a high-performance service — transforms the conversation. Investors who would pass on the vision alone will write checks for a team with this pedigree. This person is worth giving up 10% equity for. Find them before you raise.</p>
+  </div>
+
+  <h3>First 10 hires after seed</h3>
+  <div class="grid2">
+    <div class="card">
+      <h3 style="margin-top:0;font-size:13px">Technical hires (6)</h3>
+      <ul style="margin-bottom:0">
+        <li>2× Rust systems engineers</li>
+        <li>1× Security engineer (sandboxing specialist)</li>
+        <li>1× Desktop platform (Win + macOS)</li>
+        <li>1× AI/ML (fine-tuning, evals)</li>
+        <li>1× Backend (cloud sync, licensing)</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3 style="margin-top:0;font-size:13px">Non-technical hires (4)</h3>
+      <ul style="margin-bottom:0">
+        <li>1× Developer relations (ecosystem building)</li>
+        <li>1× Designer (UX lead)</li>
+        <li>1× Content (Agent Runs videos, docs)</li>
+        <li>1× Growth (experiments, funnel)</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- MVP -->
+<div id="mvp" class="page">
+  <div class="eyebrow">Dimension 08</div>
+  <h2>MVP — the 10-week build that proves everything</h2>
+  <div class="card coral">
+    <h3 style="margin-top:0">The original problem</h3>
+    <p style="margin-bottom:0">The spec had no MVP. It described the full vision as if it would be built simultaneously. An investor reading this sees "team that doesn't know how to ship." The test for a good MVP: if this is all we ever shipped, would it teach us the one thing we need to know?</p>
+  </div>
+
+  <div class="card teal">
+    <h3 style="margin-top:0">The single question the MVP must answer</h3>
+    <p style="margin-bottom:0"><em>Does a multi-agent team produce measurably better code than a single model when given the same spec?</em> If yes, you have a category. If no, you need a different thesis.</p>
+  </div>
+
+  <h3>Week-by-week build plan</h3>
+  <table>
+    <tr><th>Weeks</th><th>What ships</th><th>What you learn</th></tr>
+    <tr><td>1–2</td><td>Rust kernel skeleton: task queue, basic agent lifecycle, WebSocket to React shell</td><td>Is the IPC architecture fast enough?</td></tr>
+    <tr><td>3–4</td><td>Four agents wired up: Architect, Backend, Frontend, QA. Simple prompts. They can communicate via message queue.</td><td>Does agent handoff produce coherent output?</td></tr>
+    <tr><td>5–6</td><td>Tauri desktop shell with agent panel UI: shows which agent is running, what it's doing, real-time token cost</td><td>Is the UX legible without explanation?</td></tr>
+    <tr><td>7–8</td><td>Local model support via Ollama. Cost ceiling controls. First end-to-end run: paste a spec, get a working codebase.</td><td>What is the actual quality vs single GPT-4o call?</td></tr>
+    <tr><td>9–10</td><td>Polish, fix the 5 worst UX bugs found in week 8 user testing. Onboarding flow. 10 people outside the team use it unsupervised.</td><td>Can someone use this without hand-holding?</td></tr>
+  </table>
+
+  <h3>What to fake in the MVP</h3>
+  <div class="card amber">
+    <ul style="margin-bottom:0">
+      <li>Agent Pack Marketplace — fake it as a JSON config file of 5 pre-built agent configs. No submission portal, no real marketplace UI.</li>
+      <li>Memory — use conversation history only. No vector DB, no semantic retrieval. That's a Month 4 problem.</li>
+      <li>Resource monitoring graphs — show real token costs, fake the CPU/RAM graphs with estimates. Real monitoring is Month 3.</li>
+      <li>Model routing — hardcode: complex tasks go to GPT-4o, simple summaries go to GPT-4o-mini. Smart routing is Month 5.</li>
+    </ul>
+  </div>
+
+  <h3>Success criteria for MVP</h3>
+  <div class="grid3">
+    <div class="metric"><div class="metric-label">User can complete first task</div><div class="metric-val" style="font-size:16px">Without help</div></div>
+    <div class="metric"><div class="metric-label">Output quality vs single model</div><div class="metric-val" style="font-size:16px">Measurably better</div></div>
+    <div class="metric"><div class="metric-label">Willingness to pay</div><div class="metric-val" style="font-size:16px">10 of 20 users</div></div>
+  </div>
+</div>
+
+<!-- INVESTOR -->
+<div id="investor" class="page">
+  <div class="eyebrow">Dimension 09</div>
+  <h2>Investor narrative — the pitch that gets a term sheet</h2>
+  <div class="card coral">
+    <h3 style="margin-top:0">The original problem</h3>
+    <p style="margin-bottom:0">The original spec had no investor narrative. It was a product spec, not a company argument. Investors need: a market insight that is non-obvious, a reason why you win and OpenAI doesn't, evidence that the team can execute, and a specific bet on timing. None of these were present.</p>
+  </div>
+
+  <h3>The four-sentence pitch</h3>
+  <div class="callout">
+    <div class="callout-title">Opening</div>
+    <p style="margin-bottom:0;font-style:italic">"Every major AI model provider is racing to build a computer-controlling agent. OpenAI built Operator for OpenAI models. Anthropic built Computer Use for Claude. Google built Mariner for Gemini. None of them will ever build the neutral layer — because neutrality conflicts with their core business model. We are building that layer: AgentOS, a model-neutral agent kernel for desktop, with local execution, an open API, and a developer ecosystem that compounds."</p>
+  </div>
+
+  <h3>The traction narrative that matters</h3>
+  <div class="card accent">
+    <p style="margin-bottom:0">Do not pitch users or signups. Pitch evidence that multi-agent is better. One reproducible benchmark — "when given the same spec, our 4-agent team produces code that passes 73% more test cases than a single GPT-4o call, at 2.3x the cost but 4x the quality" — is worth more than 5,000 waitlist signups. This benchmark is the company's intellectual property. It validates the thesis. It generates press. It answers the "why multi-agent?" question permanently.</p>
+  </div>
+
+  <h3>Milestone gates for funding</h3>
+  <table>
+    <tr><th>Round</th><th>Raise</th><th>Milestones required</th></tr>
+    <tr><td>Pre-seed</td><td>$500k–1M</td><td>4-person team, MVP shipping, 50 paying users, benchmark published</td></tr>
+    <tr><td>Seed</td><td>$3–5M</td><td>500 paying users, $10k MRR, 20 Agent Packs in marketplace, 1 enterprise pilot</td></tr>
+    <tr><td>Series A</td><td>$15–25M</td><td>$100k MRR, 100+ packs, measurable ecosystem lock-in (developer NPS > 60), enterprise contracts</td></tr>
+  </table>
+
+  <h3>The defensibility answer (memorize this)</h3>
+  <div class="card teal">
+    <p style="margin-bottom:0">"OpenAI cannot build a model-neutral kernel without competing with their own model business. They cannot open-source the kernel without commoditizing their moat. We have a structural advantage that gets stronger as the number of competing models increases — and that number is going up every month. The more fragmented the model market, the more valuable the neutral orchestration layer."</p>
+  </div>
+</div>
+
+<!-- SCORECARD -->
+<div id="scorecard" class="page">
+  <div class="eyebrow">Dimension 10</div>
+  <h2>Scorecard — before and after</h2>
+  <p>Each dimension rated 1–10. Left = original spec score. Right = score after implementing this playbook.</p>
+
+  <div style="margin:1.25rem 0">
+    ${[
+      ["Vision clarity","3","9","Model-neutral kernel is a defensible, ownable category claim"],
+      ["Product scope discipline","2","8","Three-phase roadmap with explicit cuts and fake-it items"],
+      ["Technical architecture","2","8","Rust kernel, Tauri shell, staged computer control, WASM plugins"],
+      ["Security posture","1","9","Injection firewall, WASM sandbox, OS keychain, immutable audit log"],
+      ["Business model","2","8","BYOK free tier eliminates compute loss; token resale + marketplace cut"],
+      ["Go-to-market clarity","3","8","Developer flywheel with viral benchmark and Agent Runs content"],
+      ["Team composition","2","8","Defined founding team with non-negotiable systems engineer hire"],
+      ["MVP definition","1","9","10-week plan with explicit success criteria and fake-it list"],
+      ["Investor narrative","2","9","Non-obvious insight + defensibility argument + milestone gates"],
+      ["Competitive positioning","3","8","Structural moat vs model providers; wins on neutrality + local-first"],
+    ].map(([name, before, after, note]) => `
+    <div class="score-row">
+      <div>
+        <div class="score-name">${name}</div>
+        <div style="font-size:11px;color:var(--color-text-tertiary);margin-top:2px;line-height:1.4">${note}</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;flex-shrink:0">
+        <div class="score-before">${before}/10</div>
+        <div class="score-arrow">→</div>
+        <div class="score-after">${after}/10</div>
+      </div>
+    </div>`).join('')}
+  </div>
+
+  <div class="sep"></div>
+
+  <div class="grid2" style="margin-bottom:1.25rem">
+    <div class="metric"><div class="metric-label">Average score before</div><div class="metric-val" style="color:#A32D2D">2.1</div></div>
+    <div class="metric"><div class="metric-label">Average score after</div><div class="metric-val" style="color:#0F6E56">8.4</div></div>
+  </div>
+
+  <div class="grid2" style="margin-bottom:1.25rem">
+    <div class="metric"><div class="metric-label">Success probability before</div><div class="metric-val" style="color:#A32D2D">5%</div></div>
+    <div class="metric"><div class="metric-label">Success probability after</div><div class="metric-val" style="color:#0F6E56">38%</div></div>
+  </div>
+
+  <div class="final-box">
+    <div class="eyebrow" style="margin-bottom:6px">Revised verdict</div>
+    <div class="final-number">Build</div>
+    <p style="margin-top:8px;margin-bottom:0;font-size:14px;color:var(--color-text-secondary);line-height:1.8">With these upgrades applied — specifically the narrowed MVP, the BYOK pricing model, the Rust kernel architecture, the developer flywheel GTM, and the model-neutrality positioning — AgentOS becomes a fundable company with a genuine structural moat. The vision is still ambitious. Execution risk is still high. But the specific things that made this a "do not build" are now addressed. The 10-week MVP proves the core thesis. The ecosystem compounds on its own. The model proliferation tailwind gets stronger every month.<br><br>Start with the kernel. Ship the benchmark. Build the ecosystem. Expand the OS.</p>
+  </div>
+
+  <div style="margin-top:1.25rem">
+    <button onclick="sendPrompt('Go deep on the Rust kernel architecture for AgentOS — give me the specific data structures, actor model design, and IPC protocol ↗')" style="font-size:13px;margin-right:8px;margin-bottom:8px">Deep dive: Rust kernel ↗</button>
+    <button onclick="sendPrompt('Design the Agent Pack marketplace — manifest format, WASM API surface, review process, and developer onboarding ↗')" style="font-size:13px;margin-right:8px;margin-bottom:8px">Deep dive: marketplace ↗</button>
+    <button onclick="sendPrompt('Write the investor pitch deck outline for AgentOS using the upgraded positioning and narrative ↗')" style="font-size:13px;margin-bottom:8px">Write the pitch deck ↗</button>
+  </div>
+</div>
+
+</div>
+
+<script>
+function show(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav button').forEach(b=>b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  event.target.classList.add('active');
+}
+</script>
