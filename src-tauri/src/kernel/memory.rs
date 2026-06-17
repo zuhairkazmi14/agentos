@@ -48,3 +48,12 @@ pub fn load_runs() -> Result<Vec<AgentRunState>, String> {
         
     Ok(runs)
 }
+
+/// Clears all agent run records from the JSON memory vault.
+pub fn clear_runs() -> Result<(), String> {
+    if std::path::Path::new(MEMORY_FILE).exists() {
+        fs::remove_file(MEMORY_FILE)
+            .map_err(|e| format!("Failed to clear memory database: {}", e))?;
+    }
+    Ok(())
+}
