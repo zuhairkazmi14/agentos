@@ -309,7 +309,17 @@ Secure execution guidelines complied.`
   }, [status]);
 
   const handleStartRun = () => {
-    setStatus('starting');
+    if (invoke) {
+      setStatus('starting');
+      setActiveAgent('Architect');
+      setActiveModel(models.Architect);
+      setLogs(['[System] Initializing Kernel process...', '[System] Secure Sandbox initialized (least privilege policy enforced).']);
+      setGeneratedFiles([]);
+      setProgress(5);
+      // Native invocation setup will go here
+    } else {
+      setStatus('starting');
+    }
   };
 
   const handleSaveKeys = (e: React.FormEvent) => {
