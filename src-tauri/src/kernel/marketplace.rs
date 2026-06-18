@@ -18,4 +18,4 @@ pub struct AgentPack {
 }
 fn get_default_packs() -> Vec<AgentPack> { vec![] }
 fn load_installed_ids() -> Vec<String> { vec![] }
-fn save_installed_ids(ids: &[String]) -> Result<(), String> { Ok(()) }pub fn list_packs() -> Result<Vec<AgentPack>, String> { Ok(vec![]) }
+fn save_installed_ids(ids: &[String]) -> Result<(), String> { Ok(()) }pub fn list_packs() -> Result<Vec<AgentPack>, String> { Ok(vec![]) }pub fn toggle_install(pack_id: String, install: bool) -> Result<Vec<AgentPack>, String> { Ok(vec![]) }
