@@ -316,7 +316,53 @@ Secure execution guidelines complied.`
       setLogs(['[System] Initializing Kernel process...', '[System] Secure Sandbox initialized (least privilege policy enforced).']);
       setGeneratedFiles([]);
       setProgress(5);
-      // Native invocation setup will go here
+      
+      let unlistenProgress: any = null;
+      
+      const setupListener = async () => {
+        if (listen) {
+          unlistenProgress = await listen('agent-progress', (event: any) => {
+            const state = event.payload;
+            if (state.current_agent) {
+              setActiveAgent(state.current_agent);
+              setActiveModel(models[state.current_agent] || 'Llama-3 (Local)');
+            } else {
+              setActiveAgent(null);
+            }
+            if (state.status) setStatus(state.status);
+            if (state.progress !== undefined) setProgress(state.progress);
+            if (state.total_tokens !== undefined) setTotalTokens(state.total_tokens);
+            if (state.total_cost !== undefined) setTotalCost(state.total_cost);
+            if (state.files) setGeneratedFiles(state.files);
+            if (state.messages) {
+              const formattedLogs = state.messages.map((m: any) => `[${m.sender}] ${m.content}`);
+              setLogs(formattedLogs);
+            }
+          });
+        }
+      };
+
+      setupListener().then(() => {
+        invoke('start_agent_run', { prompt, models })
+          .then((finalState: any) => {
+            setStatus('completed');
+            setProgress(100);
+            setActiveAgent(null);
+            if (finalState.files) setGeneratedFiles(finalState.files);
+            if (finalState.messages) {
+              const formattedLogs = finalState.messages.map((m: any) => `[${m.sender}] ${m.content}`);
+              setLogs(formattedLogs);
+            }
+            if (unlistenProgress) unlistenProgress();
+          })
+          .catch((err: any) => {
+            console.error("Agent run failed:", err);
+            setStatus('failed');
+            setLogs(prev => [...prev, `[System Error] ${err}`]);
+            setActiveAgent(null);
+            if (unlistenProgress) unlistenProgress();
+          });
+      });
     } else {
       setStatus('starting');
     }
