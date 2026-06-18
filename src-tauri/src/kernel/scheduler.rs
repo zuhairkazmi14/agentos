@@ -94,6 +94,8 @@ impl OrchestrationScheduler {
                         timestamp: 1718580000,
                     });
 
+                    let _ = window.emit("agent-progress", &state);
+
                     match role {
                         AgentRole::Architect => {
                             let _ = back_tx.send(AgentTask {
@@ -120,6 +122,7 @@ impl OrchestrationScheduler {
                             state.status = "completed".to_string();
                             state.progress = 100.0;
                             state.current_agent = None;
+                            let _ = window.emit("agent-progress", &state);
                             break; // Orchestration pipeline finished
                         }
                     }
@@ -128,6 +131,14 @@ impl OrchestrationScheduler {
                 AgentEvent::Failed { role, error, .. } => {
                     state.status = "failed".to_string();
                     state.current_agent = None;
+                    state.messages.push(AgentMessage {
+                        id: Uuid::new_v4().to_string(),
+                        sender: role,
+                        recipient: None,
+                        content: format!("Agent failed: {}", error),
+                        timestamp: 1718580000,
+                    });
+                    let _ = window.emit("agent-progress", &state);
                     return Err(format!("Pipeline runtime error in Agent {}: {}", role, error));
                 }
             }
