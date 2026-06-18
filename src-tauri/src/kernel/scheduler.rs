@@ -2,11 +2,13 @@ use std::collections::HashMap;
 use tokio::sync::mpsc;
 use crate::kernel::{AgentRole, AgentActor, AgentTask, AgentEvent, AgentRunState, AgentMessage, CodeFile};
 use uuid::Uuid;
+use tauri::Emitter;
 
 pub struct OrchestrationScheduler;
 
 impl OrchestrationScheduler {
     pub async fn run_orchestration(
+        window: tauri::Window,
         prompt: String,
         _models: HashMap<String, String>,
     ) -> Result<AgentRunState, String> {
