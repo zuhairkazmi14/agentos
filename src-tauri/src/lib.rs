@@ -10,8 +10,8 @@ fn greet(name: &str) -> String {
 }
 
 #[tauri::command]
-async fn start_agent_run(prompt: String, models: HashMap<String, String>) -> Result<AgentRunState, String> {
-    kernel::OrchestrationScheduler::run_orchestration(prompt, models).await
+async fn start_agent_run(window: tauri::Window, prompt: String, models: HashMap<String, String>) -> Result<AgentRunState, String> {
+    kernel::OrchestrationScheduler::run_orchestration(window, prompt, models).await
 }
 
 #[tauri::command]
