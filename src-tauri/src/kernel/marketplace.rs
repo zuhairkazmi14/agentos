@@ -16,3 +16,5 @@ pub struct AgentPack {
     pub permissions: Vec<String>,
     pub version: String,
 }
+fn get_default_packs() -> Vec<AgentPack> { vec![] }
+
