@@ -7,6 +7,19 @@ import { WorkspaceHeader } from './components/WorkspaceHeader';
 import { AgentNodeGraph } from './components/AgentNodeGraph';
 import { CodePreview } from './components/CodePreview';
 
+let invoke: any = null;
+let listen: any = null;
+
+if (typeof window !== 'undefined' && ((window as any).__TAURI_INTERNALS__ || (window as any).__TAURI__)) {
+  import('@tauri-apps/api/core').then(mod => {
+    invoke = mod.invoke;
+  }).catch(err => console.error("Failed to load Tauri core module", err));
+
+  import('@tauri-apps/api/event').then(mod => {
+    listen = mod.listen;
+  }).catch(err => console.error("Failed to load Tauri event module", err));
+}
+
 interface CodeFile {
   path: string;
   content: string;
