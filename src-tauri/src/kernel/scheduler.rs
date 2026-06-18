@@ -78,6 +78,8 @@ impl OrchestrationScheduler {
                         content: message,
                         timestamp: 1718580000,
                     });
+
+                    let _ = window.emit("agent-progress", &state);
                 }
                 
                 AgentEvent::Finished { role, output_files, .. } => {
