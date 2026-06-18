@@ -17,4 +17,5 @@ pub struct AgentPack {
     pub version: String,
 }
 fn get_default_packs() -> Vec<AgentPack> { vec![] }
-
+fn load_installed_ids() -> Vec<String> { vec![] }
+fn save_installed_ids(ids: &[String]) -> Result<(), String> { Ok(()) }
