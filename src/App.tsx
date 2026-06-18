@@ -58,61 +58,62 @@ export default function App() {
   // Simulated Agent Runner
   useEffect(() => {
     let timer: number;
-    if (status === 'starting') {
-      setActiveAgent('Architect');
-      setActiveModel(models.Architect);
-      setLogs(['[System] Initializing Kernel process...', '[System] Secure Sandbox initialized (least privilege policy enforced).']);
-      setGeneratedFiles([]);
-      setProgress(5);
-      
-      timer = window.setTimeout(() => setStatus('architect'), 1500);
-    } 
-    else if (status === 'architect') {
-      setActiveAgent('Architect');
-      setActiveModel(models.Architect);
-      setLogs(prev => [
-        ...prev, 
-        '[Architect] Analyzing specifications from user prompt...', 
-        '[Architect] Constructing data structure layout and page structure schema...'
-      ]);
-      setTotalTokens(prev => prev + 1200);
-      setTotalCost(prev => prev + 0.0084);
-      setProgress(20);
+    if (!invoke) {
+      if (status === 'starting') {
+        setActiveAgent('Architect');
+        setActiveModel(models.Architect);
+        setLogs(['[System] Initializing Kernel process...', '[System] Secure Sandbox initialized (least privilege policy enforced).']);
+        setGeneratedFiles([]);
+        setProgress(5);
+        
+        timer = window.setTimeout(() => setStatus('architect'), 1500);
+      } 
+      else if (status === 'architect') {
+        setActiveAgent('Architect');
+        setActiveModel(models.Architect);
+        setLogs(prev => [
+          ...prev, 
+          '[Architect] Analyzing specifications from user prompt...', 
+          '[Architect] Constructing data structure layout and page structure schema...'
+        ]);
+        setTotalTokens(prev => prev + 1200);
+        setTotalCost(prev => prev + 0.0084);
+        setProgress(20);
 
-      const specFile = {
-        path: 'architecture_spec.json',
-        language: 'json',
-        content: JSON.stringify({
-          project: "AgentOS Generated App",
-          layout: "Kanban Board",
-          columns: ["Todo", "In Progress", "Done"],
-          styling: "Dark-mode glassmorphism HSL",
-          features: ["drag-and-drop", "persistent-localstorage", "card-filtering"]
-        }, null, 2)
-      };
+        const specFile = {
+          path: 'architecture_spec.json',
+          language: 'json',
+          content: JSON.stringify({
+            project: "AgentOS Generated App",
+            layout: "Kanban Board",
+            columns: ["Todo", "In Progress", "Done"],
+            styling: "Dark-mode glassmorphism HSL",
+            features: ["drag-and-drop", "persistent-localstorage", "card-filtering"]
+          }, null, 2)
+        };
 
-      timer = window.setTimeout(() => {
-        setGeneratedFiles([specFile]);
-        setLogs(prev => [...prev, '[Architect] Emitted architecture_spec.json. Delegating database state setup to Backend.']);
-        setStatus('backend');
-      }, 3000);
-    } 
-    else if (status === 'backend') {
-      setActiveAgent('Backend');
-      setActiveModel(models.Backend);
-      setProgress(45);
-      setLogs(prev => [
-        ...prev, 
-        '[Backend] Generating JavaScript logic script...', 
-        '[Backend] Injecting state handlers and localStorage hook callbacks...'
-      ]);
-      setTotalTokens(prev => prev + 2400);
-      setTotalCost(prev => prev + 0.0152);
+        timer = window.setTimeout(() => {
+          setGeneratedFiles([specFile]);
+          setLogs(prev => [...prev, '[Architect] Emitted architecture_spec.json. Delegating database state setup to Backend.']);
+          setStatus('backend');
+        }, 3000);
+      } 
+      else if (status === 'backend') {
+        setActiveAgent('Backend');
+        setActiveModel(models.Backend);
+        setProgress(45);
+        setLogs(prev => [
+          ...prev, 
+          '[Backend] Generating JavaScript logic script...', 
+          '[Backend] Injecting state handlers and localStorage hook callbacks...'
+        ]);
+        setTotalTokens(prev => prev + 2400);
+        setTotalCost(prev => prev + 0.0152);
 
-      const jsFile = {
-        path: 'app.js',
-        language: 'javascript',
-        content: `// Kanban Board State Management Engine
+        const jsFile = {
+          path: 'app.js',
+          language: 'javascript',
+          content: `// Kanban Board State Management Engine
 const initialColumns = {
   todo: [
     { id: '1', title: 'Setup GitHub Actions Workspace', tags: ['CI-CD'] },
@@ -146,30 +147,30 @@ function addCard(columnId, text) {
 
 window.addCard = addCard;
 `
-      };
+        };
 
-      timer = window.setTimeout(() => {
-        setGeneratedFiles(prev => [...prev, jsFile]);
-        setLogs(prev => [...prev, '[Backend] State machine scripts compiled in app.js. Handing over layout to Frontend.']);
-        setStatus('frontend');
-      }, 3000);
-    } 
-    else if (status === 'frontend') {
-      setActiveAgent('Frontend');
-      setActiveModel(models.Frontend);
-      setProgress(75);
-      setLogs(prev => [
-        ...prev, 
-        '[Frontend] Designing markup structures and custom dark styles...', 
-        '[Frontend] Assembling responsive CSS selectors using clean neon accents...'
-      ]);
-      setTotalTokens(prev => prev + 3100);
-      setTotalCost(prev => prev + 0.0210);
+        timer = window.setTimeout(() => {
+          setGeneratedFiles(prev => [...prev, jsFile]);
+          setLogs(prev => [...prev, '[Backend] State machine scripts compiled in app.js. Handing over layout to Frontend.']);
+          setStatus('frontend');
+        }, 3000);
+      } 
+      else if (status === 'frontend') {
+        setActiveAgent('Frontend');
+        setActiveModel(models.Frontend);
+        setProgress(75);
+        setLogs(prev => [
+          ...prev, 
+          '[Frontend] Designing markup structures and custom dark styles...', 
+          '[Frontend] Assembling responsive CSS selectors using clean neon accents...'
+        ]);
+        setTotalTokens(prev => prev + 3100);
+        setTotalCost(prev => prev + 0.0210);
 
-      const cssFile = {
-        path: 'style.css',
-        language: 'css',
-        content: `body {
+        const cssFile = {
+          path: 'style.css',
+          language: 'css',
+          content: `body {
   background: #09090b;
   color: #fafafa;
   font-family: sans-serif;
@@ -222,12 +223,12 @@ input {
   margin-top: 10px;
   font-size: 11px;
 }`
-      };
+        };
 
-      const htmlFile = {
-        path: 'index.html',
-        language: 'html',
-        content: `<!DOCTYPE html>
+        const htmlFile = {
+          path: 'index.html',
+          language: 'html',
+          content: `<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -264,43 +265,44 @@ input {
   </div>
 </body>
 </html>`
-      };
+        };
 
-      timer = window.setTimeout(() => {
-        setGeneratedFiles(prev => [...prev, cssFile, htmlFile]);
-        setLogs(prev => [...prev, '[Frontend] Assembled layout templates in index.html and style.css. Invoking QA auditor checks.']);
-        setStatus('qa');
-      }, 3500);
-    } 
-    else if (status === 'qa') {
-      setActiveAgent('QA');
-      setActiveModel(models.QA);
-      setProgress(90);
-      setLogs(prev => [
-        ...prev, 
-        '[QA Auditor] Executing syntactical validations and security audits...', 
-        '[QA Auditor] Scanning source code for committed key signatures...'
-      ]);
-      setTotalTokens(prev => prev + 1500);
-      setTotalCost(prev => prev + 0.0000); // Local models are cost $0.00!
+        timer = window.setTimeout(() => {
+          setGeneratedFiles(prev => [...prev, cssFile, htmlFile]);
+          setLogs(prev => [...prev, '[Frontend] Assembled layout templates in index.html and style.css. Invoking QA auditor checks.']);
+          setStatus('qa');
+        }, 3500);
+      } 
+      else if (status === 'qa') {
+        setActiveAgent('QA');
+        setActiveModel(models.QA);
+        setProgress(90);
+        setLogs(prev => [
+          ...prev, 
+          '[QA Auditor] Executing syntactical validations and security audits...', 
+          '[QA Auditor] Scanning source code for committed key signatures...'
+        ]);
+        setTotalTokens(prev => prev + 1500);
+        setTotalCost(prev => prev + 0.0000); // Local models are cost $0.00!
 
-      const qaReport = {
-        path: 'qa_audit_report.txt',
-        language: 'text',
-        content: `AGENTOS QA AUDIT COMPLETED
+        const qaReport = {
+          path: 'qa_audit_report.txt',
+          language: 'text',
+          content: `AGENTOS QA AUDIT COMPLETED
 ===========================
 Project Validation: SUCCESS
 Syntax Audit: All scripts parsed successfully.
 Leak Check: No embedded tokens or secret key structures found in files.
 Secure execution guidelines complied.`
-      };
+        };
 
-      timer = window.setTimeout(() => {
-        setGeneratedFiles(prev => [...prev, qaReport]);
-        setLogs(prev => [...prev, '[QA Auditor] All test blocks compiled. Code execution approved! Handing control back to Tauri runtime.']);
-        setStatus('completed');
-        setProgress(100);
-      }, 3000);
+        timer = window.setTimeout(() => {
+          setGeneratedFiles(prev => [...prev, qaReport]);
+          setLogs(prev => [...prev, '[QA Auditor] All test blocks compiled. Code execution approved! Handing control back to Tauri runtime.']);
+          setStatus('completed');
+          setProgress(100);
+        }, 3000);
+      }
     }
 
     return () => clearTimeout(timer);
