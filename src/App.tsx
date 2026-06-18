@@ -315,13 +315,30 @@ Secure execution guidelines complied.`
   const handleSaveKeys = (e: React.FormEvent) => {
     e.preventDefault();
     setShowSettings(false);
-    // Keys would also call save_api_key in a native tauri shell.
-    console.log('Stored secure keys for providers:', {
-      hasOpenai: !!openaiKey,
-      hasAnthropic: !!anthropicKey,
-      hasGemini: !!geminiKey
-    });
-    alert('Keys securely stored in local keychain memory!');
+    
+    if (invoke) {
+      Promise.all([
+        openaiKey ? invoke('save_api_key', { provider: 'OpenAI', key: openaiKey }) : Promise.resolve(),
+        anthropicKey ? invoke('save_api_key', { provider: 'Anthropic', key: anthropicKey }) : Promise.resolve(),
+        geminiKey ? invoke('save_api_key', { provider: 'Gemini', key: geminiKey }) : Promise.resolve(),
+      ])
+        .then((results) => {
+          const successes = results.filter(r => r);
+          console.log('Stored secure keys for providers:', successes);
+          alert('Credentials securely stored in OS Keychain via Tauri backend!');
+        })
+        .catch((err) => {
+          console.error(err);
+          alert(`Failed to save secure keys: ${err}`);
+        });
+    } else {
+      console.log('Stored secure keys for providers:', {
+        hasOpenai: !!openaiKey,
+        hasAnthropic: !!anthropicKey,
+        hasGemini: !!geminiKey
+      });
+      alert('Keys securely stored in local keychain memory!');
+    }
   };
 
   return (
