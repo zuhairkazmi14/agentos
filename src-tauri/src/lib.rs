@@ -28,3 +28,12 @@ fn get_memory_runs() -> Result<Vec<AgentRunState>, String> {
 fn clear_memory_runs() -> Result<(), String> {
     kernel::memory::clear_runs()
 }
+#[tauri::command]
+fn list_marketplace_packs() -> Result<Vec<AgentPack>, String> {
+    kernel::marketplace::list_packs()
+}
+
+#[tauri::command]
+fn toggle_marketplace_pack(pack_id: String, install: bool) -> Result<Vec<AgentPack>, String> {
+    kernel::marketplace::toggle_install(pack_id, install)
+}
