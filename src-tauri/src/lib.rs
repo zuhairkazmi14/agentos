@@ -20,3 +20,7 @@ fn save_api_key(provider: String, key: String) -> Result<String, String> {
     }
     Ok(format!("Successfully encrypted and stored {} key in OS keychain", provider))
 }
+#[tauri::command]
+fn get_memory_runs() -> Result<Vec<AgentRunState>, String> {
+    kernel::memory::load_runs()
+}
