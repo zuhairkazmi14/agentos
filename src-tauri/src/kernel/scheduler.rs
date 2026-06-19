@@ -122,6 +122,7 @@ impl OrchestrationScheduler {
                             state.status = "completed".to_string();
                             state.progress = 100.0;
                             state.current_agent = None;
+                            let _ = crate::kernel::memory::save_run(state.clone());
                             let _ = window.emit("agent-progress", &state);
                             break; // Orchestration pipeline finished
                         }
