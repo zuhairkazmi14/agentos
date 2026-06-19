@@ -24,3 +24,7 @@ fn save_api_key(provider: String, key: String) -> Result<String, String> {
 fn get_memory_runs() -> Result<Vec<AgentRunState>, String> {
     kernel::memory::load_runs()
 }
+#[tauri::command]
+fn clear_memory_runs() -> Result<(), String> {
+    kernel::memory::clear_runs()
+}
