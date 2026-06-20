@@ -1038,3 +1038,5 @@ Secure execution guidelines complied.`
 // Commit 6: Create placeholder divs structure for Agent Pack Marketplace Workspace
 
 // Commit 7: Setup state hook variables memoryRuns, selectedRunId, etc.
+
+// Commit 8: Wire workspace header packs count badge
