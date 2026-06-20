@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { 
   Compass, Play, ShieldAlert, Activity, Settings, 
-  Terminal, Shield, Code2, Sparkles, Key, AlertTriangle, Check, Info, ArrowRight
+  Terminal, Shield, Code2, Sparkles, Key, AlertTriangle, Check, Info, ArrowRight,
+  Database, ShoppingBag, Search, Trash2, CheckCircle2, Download, ShieldCheck
 } from 'lucide-react';
 import { WorkspaceHeader } from './components/WorkspaceHeader';
 import { AgentNodeGraph } from './components/AgentNodeGraph';
@@ -54,6 +55,15 @@ export default function App() {
     Frontend: 'Claude 3.5 Sonnet',
     QA: 'Llama-3 (Local)'
   });
+
+  // Memory & Marketplace States
+  const [memoryRuns, setMemoryRuns] = useState<any[]>([]);
+  const [selectedRunId, setSelectedRunId] = useState<string | null>(null);
+  const [memorySearch, setMemorySearch] = useState<string>('');
+  const [marketplacePacks, setMarketplacePacks] = useState<any[]>([]);
+  const [marketplaceCategory, setMarketplaceCategory] = useState<string>('All');
+  const [selectedHistoricalFileIdx, setSelectedHistoricalFileIdx] = useState<number>(0);
+  const [selectedHistoricalTab, setSelectedHistoricalTab] = useState<'files' | 'logs'>('files');
 
   // Simulated Agent Runner
   useEffect(() => {
@@ -297,10 +307,33 @@ Secure execution guidelines complied.`
         };
 
         timer = window.setTimeout(() => {
-          setGeneratedFiles(prev => [...prev, qaReport]);
+          const runId = "sim_" + Date.now();
+          const finalFiles = [...generatedFiles, qaReport];
+          setGeneratedFiles(finalFiles);
           setLogs(prev => [...prev, '[QA Auditor] All test blocks compiled. Code execution approved! Handing control back to Tauri runtime.']);
           setStatus('completed');
           setProgress(100);
+
+          const newSimRun = {
+            run_id: runId,
+            prompt: prompt,
+            current_agent: null,
+            status: "completed",
+            progress: 100,
+            total_tokens: totalTokens + 1500,
+            total_cost: totalCost,
+            timestamp: Math.floor(Date.now() / 1000),
+            messages: [
+              { id: "m0", sender: "System", content: "Initializing Kernel process...", timestamp: Date.now() },
+              { id: "m1", sender: "Architect", content: "Analyzing specifications from user prompt. Drafting initial design.", timestamp: Date.now() },
+              { id: "m2", sender: "Backend", content: "Generating JavaScript logic script. LocalStorage hook applied.", timestamp: Date.now() },
+              { id: "m3", sender: "Frontend", content: "Designing markup structures and custom dark styles.", timestamp: Date.now() },
+              { id: "m4", sender: "QA", content: "All test blocks compiled. Code execution approved!", timestamp: Date.now() }
+            ],
+            files: finalFiles
+          };
+          setMemoryRuns(prev => [newSimRun, ...prev]);
+          setSelectedRunId(runId);
         }, 3000);
       }
     }
@@ -354,6 +387,16 @@ Secure execution guidelines complied.`
               setLogs(formattedLogs);
             }
             if (unlistenProgress) unlistenProgress();
+
+            // Reload memory runs from backend database
+            invoke('get_memory_runs')
+              .then((runs: any) => {
+                setMemoryRuns(runs);
+                if (finalState.run_id) {
+                  setSelectedRunId(finalState.run_id);
+                }
+              })
+              .catch((err: any) => console.error("Failed to reload memory runs", err));
           })
           .catch((err: any) => {
             console.error("Agent run failed:", err);
@@ -397,6 +440,35 @@ Secure execution guidelines complied.`
     }
   };
 
+  const handleClearMemory = () => {
+    if (confirm("Are you sure you want to clear all memory run history? This cannot be undone.")) {
+      if (invoke) {
+        invoke('clear_memory_runs')
+          .then(() => {
+            setMemoryRuns([]);
+            setSelectedRunId(null);
+          })
+          .catch((err: any) => alert("Failed to clear memory: " + err));
+      } else {
+        setMemoryRuns([]);
+        setSelectedRunId(null);
+      }
+    }
+  };
+
+  const handleTogglePackInstall = (packId: string, currentInstalled: boolean) => {
+    const nextState = !currentInstalled;
+    if (invoke) {
+      invoke('toggle_marketplace_pack', { pack_id: packId, install: nextState })
+        .then((updatedPacks: any) => setMarketplacePacks(updatedPacks))
+        .catch((err: any) => alert("Failed to toggle pack install: " + err));
+    } else {
+      setMarketplacePacks(prev => 
+        prev.map(pack => pack.id === packId ? { ...pack, installed: nextState } : pack)
+      );
+    }
+  };
+
   return (
     <div className="flex h-screen w-screen bg-[#09090b] text-[#fafafa] select-none">
       
@@ -422,6 +494,28 @@ Secure execution guidelines complied.`
             >
               <Sparkles className="w-4 h-4" />
               Agent Sandbox
+            </button>
+
+            <button
+              onClick={() => setActiveTab('memory')}
+              className={`flex items-center gap-2.5 w-full text-left px-2.5 py-2 rounded-lg text-xs font-semibold cursor-pointer transition-all ${
+                activeTab === 'memory' ? 'bg-[#18181b] text-indigo-300 border border-[#27272a]' : 'text-[#a1a1aa] hover:bg-[#0f0f13] hover:text-[#fafafa]'
+              }`}
+              style={activeTab === 'memory' ? { backgroundColor: '#18181b', color: '#a5b4fc', border: '1px solid #27272a' } : {}}
+            >
+              <Database className="w-4 h-4" />
+              Memory Vault
+            </button>
+
+            <button
+              onClick={() => setActiveTab('marketplace')}
+              className={`flex items-center gap-2.5 w-full text-left px-2.5 py-2 rounded-lg text-xs font-semibold cursor-pointer transition-all ${
+                activeTab === 'marketplace' ? 'bg-[#18181b] text-indigo-300 border border-[#27272a]' : 'text-[#a1a1aa] hover:bg-[#0f0f13] hover:text-[#fafafa]'
+              }`}
+              style={activeTab === 'marketplace' ? { backgroundColor: '#18181b', color: '#a5b4fc', border: '1px solid #27272a' } : {}}
+            >
+              <ShoppingBag className="w-4 h-4" />
+              Marketplace
             </button>
 
             <div className="h-[1px] bg-[#27272a] my-2" />
@@ -454,7 +548,7 @@ Secure execution guidelines complied.`
         {/* Footer info */}
         <div className="p-3 border-t border-[#27272a] text-[10px] text-[#71717a] flex flex-col gap-1" style={{ borderTop: '1px solid #27272a' }}>
           <div>Model-neutral Agent kernel</div>
-          <a href="https://github.com/agentos-project/agentos" target="_blank" rel="noreferrer" className="text-indigo-400 hover:underline">GitHub Project â†—</a>
+          <a href="https://github.com/agentos-project/agentos" target="_blank" rel="noreferrer" className="text-indigo-400 hover:underline">GitHub Project Gåù</a>
         </div>
       </div>
 
@@ -462,7 +556,7 @@ Secure execution guidelines complied.`
       <div className="flex-1 flex flex-col overflow-hidden bg-[#09090b]">
         
         {/* Playbook tabs panels */}
-        {activeTab !== 'demo' ? (
+        {activeTab !== 'demo' && activeTab !== 'memory' && activeTab !== 'marketplace' ? (
           <div className="flex-1 overflow-y-auto p-6 max-w-4xl mx-auto w-full">
             
             {activeTab === 'vision' && (
@@ -472,7 +566,7 @@ Secure execution guidelines complied.`
                   <h1 className="text-2xl font-bold mt-1 mb-2">Category Claim: Own the Kernel Layer</h1>
                   <p className="text-sm text-[#a1a1aa] leading-relaxed">
                     Model providers are vertically integrated toward the end-user and will never build a neutral orchestration kernel. OpenAI Operator works for OpenAI models. Claude Computer Use works for Anthropic models. Google Mariner works for Gemini. 
-                    <strong> AgentOS is the model-neutral runtime</strong> â€” the operating layer underneath every desktop agent.
+                    <strong> AgentOS is the model-neutral runtime</strong> GÇö the operating layer underneath every desktop agent.
                   </p>
                 </div>
 
@@ -483,7 +577,7 @@ Secure execution guidelines complied.`
                   </div>
                   <div className="p-4 rounded-xl border border-emerald-500/10 bg-emerald-500/5" style={{ border: '1px solid rgba(16, 185, 129, 0.1)', backgroundColor: 'rgba(16, 185, 129, 0.05)' }}>
                     <h3 className="text-sm font-semibold text-emerald-400 mb-2 flex items-center gap-1.5"><Check className="w-4 h-4" /> Upgraded Vision</h3>
-                    <p className="text-xs text-[#a1a1aa] leading-relaxed">"AgentOS is the model-neutral agent kernel for desktop â€” the operating layer that lets any AI model control any computer, at any cost, without vendor lock-in."</p>
+                    <p className="text-xs text-[#a1a1aa] leading-relaxed">"AgentOS is the model-neutral agent kernel for desktop GÇö the operating layer that lets any AI model control any computer, at any cost, without vendor lock-in."</p>
                   </div>
                 </div>
 
@@ -530,19 +624,19 @@ Secure execution guidelines complied.`
                 <div className="relative border-l border-[#27272a] pl-6 ml-3 flex flex-col gap-6" style={{ borderLeft: '1px solid #27272a' }}>
                   <div className="relative">
                     <div className="absolute -left-[30px] w-4 h-4 rounded-full bg-indigo-500 border border-indigo-600 flex items-center justify-center text-[10px] font-bold text-white">1</div>
-                    <h3 className="text-sm font-semibold text-white">Phase 1: Kernel MVP (Months 1â€“4)</h3>
+                    <h3 className="text-sm font-semibold text-white">Phase 1: Kernel MVP (Months 1GÇô4)</h3>
                     <p className="text-xs text-[#a1a1aa] mt-1">Development Workspace only. 4 core agents (Architect, Backend, Frontend, QA). WebSocket real-time communication graph. Visual cost tracking widgets.</p>
                   </div>
 
                   <div className="relative">
                     <div className="absolute -left-[30px] w-4 h-4 rounded-full bg-[#18181b] border border-[#27272a] flex items-center justify-center text-[10px] font-bold text-[#71717a]">2</div>
-                    <h3 className="text-sm font-semibold text-white">Phase 2: Ecosystem (Months 5â€“9)</h3>
+                    <h3 className="text-sm font-semibold text-white">Phase 2: Ecosystem (Months 5GÇô9)</h3>
                     <p className="text-xs text-[#a1a1aa] mt-1">Open the Agent Pack API. Seed with 10 hand-built packs (Research, Writing, Finance). Integrate browser automation via Playwright sandbox. Session memory layers.</p>
                   </div>
 
                   <div className="relative">
                     <div className="absolute -left-[30px] w-4 h-4 rounded-full bg-[#18181b] border border-[#27272a] flex items-center justify-center text-[10px] font-bold text-[#71717a]">3</div>
-                    <h3 className="text-sm font-semibold text-white">Phase 3: Platform OS (Months 10â€“18)</h3>
+                    <h3 className="text-sm font-semibold text-white">Phase 3: Platform OS (Months 10GÇô18)</h3>
                     <p className="text-xs text-[#a1a1aa] mt-1">Full OS metaphor with workspaces. Agent-to-agent delegation. Full computer filesystem control, native apps integrations, enterprise dashboards, SSO & audits.</p>
                   </div>
                 </div>
@@ -749,7 +843,7 @@ Secure execution guidelines complied.`
                   <span className="text-[10px] text-indigo-400 font-semibold tracking-wider uppercase">playbook review</span>
                   <h1 className="text-2xl font-bold mt-1 mb-2">Verdict: Build the MVP</h1>
                   <p className="text-sm text-[#a1a1aa] leading-relaxed">
-                    By implementing the specific upgrades outlined â€” the model neutral scheduler, local-first safety, BYOK pricing, and the developer pack API â€” AgentOS establishes a structural moat that model providers cannot copy without harming their core businesses.
+                    By implementing the specific upgrades outlined GÇö the model neutral scheduler, local-first safety, BYOK pricing, and the developer pack API GÇö AgentOS establishes a structural moat that model providers cannot copy without harming their core businesses.
                   </p>
                 </div>
 
@@ -781,7 +875,7 @@ Secure execution guidelines complied.`
             )}
 
           </div>
-        ) : (
+        ) : activeTab === 'demo' ? (
           /* Live Sandbox MVP Workspace */
           <div className="flex-1 flex flex-col overflow-hidden">
             
@@ -793,6 +887,7 @@ Secure execution guidelines complied.`
               activeAgent={activeAgent}
               activeModel={activeModel}
               onOpenSettings={() => setShowSettings(true)}
+              installedPacksCount={marketplacePacks.filter(p => p.installed).length}
             />
 
             <div className="flex-1 grid grid-cols-1 lg:grid-cols-2 gap-4 p-4 overflow-hidden min-h-0">
@@ -877,6 +972,327 @@ Secure execution guidelines complied.`
 
             </div>
 
+          </div>
+        ) : activeTab === 'memory' ? (
+          /* Memory Vault Workspace */
+          <div className="flex-1 flex flex-col overflow-hidden">
+            {/* Memory Vault Header */}
+            <div className="glass border-b border-[#27272a] p-4 flex justify-between items-center bg-[#09090b]">
+              <div>
+                <h1 className="text-base font-bold text-white flex items-center gap-2">
+                  <Database className="w-4 h-4 text-indigo-400" />
+                  Local Memory Vault Explorer
+                </h1>
+                <p className="text-xs text-[#a1a1aa] mt-0.5">Query and restore historical developer runs from the thread-safe database.</p>
+              </div>
+              <button 
+                onClick={handleClearMemory}
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-red-500/20 hover:border-red-500 bg-red-500/5 hover:bg-red-500/20 text-red-400 text-xs font-semibold cursor-pointer transition-all"
+              >
+                <Trash2 className="w-3.5 h-3.5" />
+                Clear Memory
+              </button>
+            </div>
+
+            <div className="flex-1 flex overflow-hidden min-h-0">
+              {/* Left Column: Runs List */}
+              <div className="w-[320px] border-r border-[#27272a] flex flex-col bg-[#09090b] flex-shrink-0">
+                <div className="p-3 border-b border-[#27272a] bg-[#0f0f13] flex items-center gap-2">
+                  <Search className="w-4 h-4 text-[#71717a]" />
+                  <input
+                    type="text"
+                    value={memorySearch}
+                    onChange={(e) => setMemorySearch(e.target.value)}
+                    placeholder="Search past runs (LanceDB)..."
+                    className="w-full bg-[#09090b] border border-[#27272a] rounded p-1.5 text-xs text-white placeholder-[#71717a] focus:outline-none focus:border-indigo-500/50"
+                  />
+                </div>
+                <div className="flex-1 overflow-y-auto p-2 flex flex-col gap-1.5">
+                  {memoryRuns
+                    .filter(run => run.prompt.toLowerCase().includes(memorySearch.toLowerCase()))
+                    .length === 0 ? (
+                      <div className="text-center text-[#71717a] text-xs py-8">No historical runs found</div>
+                    ) : (
+                      memoryRuns
+                        .filter(run => run.prompt.toLowerCase().includes(memorySearch.toLowerCase()))
+                        .map(run => (
+                          <button
+                            key={run.run_id}
+                            onClick={() => {
+                              setSelectedRunId(run.run_id);
+                              setSelectedHistoricalFileIdx(0);
+                            }}
+                            className={`p-3 rounded-lg text-left flex flex-col gap-1.5 cursor-pointer border transition-all ${
+                              selectedRunId === run.run_id
+                                ? 'bg-indigo-950/20 border-indigo-500 text-indigo-200'
+                                : 'bg-[#0f0f13] border-[#27272a] hover:bg-[#18181b] text-[#a1a1aa]'
+                            }`}
+                          >
+                            <div className="flex justify-between items-center text-[10px] font-mono">
+                              <span className="text-[#71717a]">{run.run_id.substring(0, 12)}</span>
+                              <span className="text-indigo-400">
+                                {new Date(run.timestamp * 1000).toLocaleDateString(undefined, {month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'})}
+                              </span>
+                            </div>
+                            <div className="text-xs font-semibold truncate text-white">{run.prompt}</div>
+                            <div className="flex gap-3 text-[10px] text-[#71717a]">
+                              <span>Tokens: {run.total_tokens.toLocaleString()}</span>
+                              <span className="text-[#60a5fa]">${run.total_cost.toFixed(4)}</span>
+                            </div>
+                          </button>
+                        ))
+                    )}
+                </div>
+              </div>
+
+              {/* Right Column: Run Detail View */}
+              {(() => {
+                const selectedRun = memoryRuns.find(r => r.run_id === selectedRunId);
+                if (!selectedRun) {
+                  return (
+                    <div className="flex-1 flex flex-col items-center justify-center text-[#71717a] gap-2.5 p-6 bg-[#09090b]">
+                      <Database className="w-10 h-10 text-[#27272a]" />
+                      <div className="text-sm font-semibold text-white">Select a historical run from the left panel</div>
+                    </div>
+                  );
+                }
+
+                return (
+                  <div className="flex-1 flex flex-col overflow-hidden bg-[#09090b]">
+                    {/* Prompt Header */}
+                    <div className="p-4 border-b border-[#27272a] bg-[#0f0f13] flex flex-col gap-2">
+                      <div className="text-[10px] text-indigo-400 uppercase tracking-widest font-bold">User Instructions Spec</div>
+                      <div className="text-xs text-white leading-relaxed font-sans">{selectedRun.prompt}</div>
+                    </div>
+
+                    {/* Stats bar */}
+                    <div className="grid grid-cols-2 md:grid-cols-4 border-b border-[#27272a] bg-[#09090b] text-center">
+                      <div className="p-2.5 border-r border-[#27272a] flex flex-col items-center justify-center">
+                        <span className="text-[9px] text-[#71717a] uppercase font-bold">Total Tokens</span>
+                        <span className="text-xs font-bold text-white mt-0.5">{selectedRun.total_tokens.toLocaleString()}</span>
+                      </div>
+                      <div className="p-2.5 border-r border-[#27272a] flex flex-col items-center justify-center">
+                        <span className="text-[9px] text-[#71717a] uppercase font-bold">Accrued Cost</span>
+                        <span className="text-xs font-bold text-blue-400 mt-0.5">${selectedRun.total_cost.toFixed(5)}</span>
+                      </div>
+                      <div className="p-2.5 border-r border-[#27272a] flex flex-col items-center justify-center">
+                        <span className="text-[9px] text-[#71717a] uppercase font-bold">Files Compiled</span>
+                        <span className="text-xs font-bold text-white mt-0.5">{selectedRun.files.length}</span>
+                      </div>
+                      <div className="p-2.5 flex flex-col items-center justify-center">
+                        <span className="text-[9px] text-[#71717a] uppercase font-bold">Trust Rating</span>
+                        <span className="text-xs font-bold text-emerald-400 mt-0.5 flex items-center gap-1"><ShieldCheck className="w-3.5 h-3.5" /> SECURE</span>
+                      </div>
+                    </div>
+
+                    {/* Navigation tabs for details */}
+                    <div className="flex border-b border-[#27272a] bg-[#0f0f13] px-4 py-1.5 gap-2">
+                      <button
+                        onClick={() => setSelectedHistoricalTab('files')}
+                        className={`text-xs font-semibold px-3 py-1 rounded-md transition-all cursor-pointer ${
+                          selectedHistoricalTab === 'files' ? 'bg-[#18181b] text-white border border-[#27272a]' : 'text-[#a1a1aa] hover:text-white'
+                        }`}
+                        style={selectedHistoricalTab === 'files' ? { backgroundColor: '#18181b', border: '1px solid #27272a' } : {}}
+                      >
+                        Source Code Files
+                      </button>
+                      <button
+                        onClick={() => setSelectedHistoricalTab('logs')}
+                        className={`text-xs font-semibold px-3 py-1 rounded-md transition-all cursor-pointer ${
+                          selectedHistoricalTab === 'logs' ? 'bg-[#18181b] text-white border border-[#27272a]' : 'text-[#a1a1aa] hover:text-white'
+                        }`}
+                        style={selectedHistoricalTab === 'logs' ? { backgroundColor: '#18181b', border: '1px solid #27272a' } : {}}
+                      >
+                        Execution Logs
+                      </button>
+                    </div>
+
+                    {/* Workspace Details Content */}
+                    <div className="flex-1 overflow-hidden flex flex-col">
+                      {selectedHistoricalTab === 'files' ? (
+                        <div className="flex-1 flex flex-col overflow-hidden">
+                          {selectedRun.files.length > 0 ? (
+                            <>
+                              <div className="flex border-b border-[#27272a] bg-[#09090b] px-4 py-1.5 gap-2 overflow-x-auto">
+                                {selectedRun.files.map((file: any, idx: number) => (
+                                  <button
+                                    key={file.path}
+                                    onClick={() => setSelectedHistoricalFileIdx(idx)}
+                                    className={`text-[11px] font-medium px-2.5 py-1 rounded cursor-pointer transition-all ${
+                                      selectedHistoricalFileIdx === idx ? 'bg-[#18181b] text-indigo-300' : 'text-[#71717a] hover:text-[#a1a1aa]'
+                                    }`}
+                                    style={selectedHistoricalFileIdx === idx ? { backgroundColor: '#18181b', color: '#a5b4fc' } : {}}
+                                  >
+                                    {file.path}
+                                  </button>
+                                ))}
+                              </div>
+                              <div className="flex-1 overflow-auto p-4 bg-[#09090b] font-mono text-xs text-[#a1a1aa] leading-relaxed select-text" style={{ fontFamily: 'var(--font-mono)' }}>
+                                <pre className="whitespace-pre-wrap">
+                                  <code>{selectedRun.files[selectedHistoricalFileIdx]?.content}</code>
+                                </pre>
+                              </div>
+                            </>
+                          ) : (
+                            <div className="flex-1 flex items-center justify-center text-xs text-[#71717a]">No files generated in this run</div>
+                          )}
+                        </div>
+                      ) : (
+                        <div className="flex-1 overflow-auto p-4 bg-[#09090b] font-mono text-xs flex flex-col gap-2 leading-relaxed select-text" style={{ fontFamily: 'var(--font-mono)' }}>
+                          {selectedRun.messages.map((m: any) => (
+                            <div key={m.id || m.timestamp} className={m.sender === 'System' || m.sender === 'System Error' ? 'text-indigo-400' : m.sender === 'QA' || m.sender === 'QA Auditor' ? 'text-amber-400' : m.sender === 'Architect' ? 'text-indigo-300' : 'text-[#a1a1aa]'}>
+                              [{m.sender}] {m.content}
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                );
+              })()}
+            </div>
+          </div>
+        ) : (
+          /* Marketplace Workspace */
+          <div className="flex-1 flex flex-col overflow-hidden">
+            {/* Marketplace Header */}
+            <div className="glass border-b border-[#27272a] p-4 flex justify-between items-center bg-[#09090b]">
+              <div>
+                <h1 className="text-base font-bold text-white flex items-center gap-2">
+                  <ShoppingBag className="w-4 h-4 text-indigo-400" />
+                  AgentOS Pack Marketplace
+                </h1>
+                <p className="text-xs text-[#a1a1aa] mt-0.5">Extend the kernel scheduling pipeline with capabilities, browser tools, and local sandboxes.</p>
+              </div>
+              <div className="flex items-center gap-2 text-xs">
+                <span className="text-[#71717a]">WASM Runtime Status:</span>
+                <span className="px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-mono">ACTIVE (ISOLATED)</span>
+              </div>
+            </div>
+
+            {/* Main scrollable marketplace content */}
+            <div className="flex-1 overflow-y-auto p-6 max-w-5xl mx-auto w-full">
+              {/* Stats & Banner */}
+              <div className="glass rounded-xl p-5 mb-6 bg-gradient-to-r from-indigo-950/10 to-[#0f0f13] border border-[#27272a] flex items-center justify-between flex-wrap gap-4" style={{ borderRadius: '12px', border: '1px solid #27272a' }}>
+                <div className="max-w-md">
+                  <span className="text-[10px] text-indigo-400 font-bold uppercase tracking-widest">Ecosystem Moat</span>
+                  <h3 className="text-sm font-bold text-white mt-1">Local Sandboxing Capabilities</h3>
+                  <p className="text-xs text-[#a1a1aa] mt-1 leading-relaxed">
+                    Every pack runs isolated inside a WASM runtime with declared manifest credentials. No path is exposed without allowlist authorization.
+                  </p>
+                </div>
+                <div className="flex gap-4">
+                  <div className="text-center px-4 py-2 border-r border-[#27272a]" style={{ borderRight: '1px solid #27272a' }}>
+                    <div className="text-[10px] text-[#71717a] font-semibold uppercase">Packs Available</div>
+                    <div className="text-2xl font-bold text-white mt-0.5">{marketplacePacks.length}</div>
+                  </div>
+                  <div className="text-center px-4 py-2">
+                    <div className="text-[10px] text-[#71717a] font-semibold uppercase">Packs Installed</div>
+                    <div className="text-2xl font-bold text-emerald-400 mt-0.5">
+                      {marketplacePacks.filter(p => p.installed).length}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Category filters */}
+              <div className="flex gap-2 mb-6 overflow-x-auto pb-1">
+                {['All', 'Browser', 'DevTools', 'Database', 'Security', 'Utilities'].map(cat => (
+                  <button
+                    key={cat}
+                    onClick={() => setMarketplaceCategory(cat)}
+                    className={`text-xs font-semibold px-3 py-1.5 rounded-lg border transition-all cursor-pointer ${
+                      marketplaceCategory === cat
+                        ? 'bg-indigo-600 border-indigo-700 text-white shadow-lg shadow-indigo-500/10'
+                        : 'bg-[#0f0f13] border-[#27272a] hover:bg-[#18181b] text-[#a1a1aa]'
+                    }`}
+                  >
+                    {cat}
+                  </button>
+                ))}
+              </div>
+
+              {/* Packs Grid */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {marketplacePacks
+                  .filter(pack => marketplaceCategory === 'All' || pack.category === marketplaceCategory)
+                  .map(pack => (
+                    <div
+                      key={pack.id}
+                      className="glass rounded-xl p-5 bg-[#0f0f13] border border-[#27272a] hover:border-[#3f3f46] flex flex-col justify-between transition-all"
+                      style={{ borderRadius: '12px', border: '1px solid #27272a' }}
+                    >
+                      <div>
+                        {/* Title bar */}
+                        <div className="flex justify-between items-start gap-2">
+                          <div>
+                            <h4 className="text-sm font-bold text-white">{pack.name}</h4>
+                            <div className="flex items-center gap-2 mt-1">
+                              <span className="text-[10px] text-[#71717a]">By {pack.author}</span>
+                              <span className="text-[9px] px-1.5 py-0.25 rounded bg-[#18181b] text-indigo-300 border border-[#27272a] font-mono">v{pack.version}</span>
+                            </div>
+                          </div>
+                          <span className="text-[9px] px-2 py-0.5 rounded-md bg-indigo-500/10 text-indigo-400 font-bold uppercase tracking-wider">
+                            {pack.category}
+                          </span>
+                        </div>
+
+                        {/* Description */}
+                        <p className="text-xs text-[#a1a1aa] mt-3 leading-relaxed">{pack.description}</p>
+
+                        {/* Permissions Manifest */}
+                        <div className="mt-4 p-3 rounded-lg bg-[#09090b] border border-[#27272a]">
+                          <div className="text-[9px] text-[#71717a] uppercase tracking-wider font-bold mb-2">Capability Allowlist:</div>
+                          <div className="flex flex-wrap gap-1.5">
+                            {pack.permissions.map((perm: string) => {
+                              const isDangerous = perm.startsWith('write') || perm.startsWith('execute');
+                              const isMedium = perm.startsWith('network');
+                              return (
+                                <span
+                                  key={perm}
+                                  className="text-[9px] font-mono px-2 py-0.5 rounded"
+                                  style={{
+                                    backgroundColor: isDangerous ? 'rgba(239, 68, 68, 0.05)' : isMedium ? 'rgba(245, 158, 11, 0.05)' : 'rgba(16, 185, 129, 0.05)',
+                                    color: isDangerous ? '#f87171' : isMedium ? '#fbbf24' : '#34d399',
+                                    border: `1px solid ${isDangerous ? 'rgba(239, 68, 68, 0.15)' : isMedium ? 'rgba(245, 158, 11, 0.15)' : 'rgba(16, 185, 129, 0.15)'}`
+                                  }}
+                                >
+                                  {perm}
+                                </span>
+                              );
+                            })}
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Action button */}
+                      <div className="mt-5 pt-3 border-t border-[#27272a] flex justify-between items-center" style={{ borderTop: '1px solid #27272a' }}>
+                        <span className="text-[10px] text-[#71717a]">WASM sandbox signed</span>
+                        <button
+                          onClick={() => handleTogglePackInstall(pack.id, pack.installed)}
+                          className={`text-xs font-semibold px-4 py-2 rounded-lg flex items-center gap-1.5 transition-all cursor-pointer ${
+                            pack.installed
+                              ? 'bg-emerald-500/10 hover:bg-red-500/10 text-emerald-400 hover:text-red-400 border border-emerald-500/20 hover:border-red-500/30'
+                              : 'bg-indigo-600 hover:bg-indigo-700 text-white border border-indigo-700 shadow-md shadow-indigo-600/10'
+                          }`}
+                        >
+                          {pack.installed ? (
+                            <>
+                              <CheckCircle2 className="w-3.5 h-3.5" />
+                              <span>Installed</span>
+                            </>
+                          ) : (
+                            <>
+                              <Download className="w-3.5 h-3.5" />
+                              <span>Install Pack</span>
+                            </>
+                          )}
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+              </div>
+            </div>
           </div>
         )}
 
@@ -1024,31 +1440,3 @@ Secure execution guidelines complied.`
     </div>
   );
 }
-
-// Commit 1: Initialize custom Lucide icons imports for ecosystem vaults
-
-// Commit 2: Add memory search filters and marketplace state interfaces
-
-// Commit 3: Add new active tabs selectors (demo, memory, marketplace)
-
-// Commit 4: Add sidebar navigations lists visual elements
-
-// Commit 5: Create placeholder divs structure for Memory Vault Workspace
-
-// Commit 6: Create placeholder divs structure for Agent Pack Marketplace Workspace
-
-// Commit 7: Setup state hook variables memoryRuns, selectedRunId, etc.
-
-// Commit 8: Wire workspace header packs count badge
-
-// Commit 9: Hook local storage key save handlers
-
-// Commit 10: Wire list_marketplace_packs loader hooks
-
-// Commit 11: Wire toggle_marketplace_pack installer hooks
-
-// Commit 12: Wire get_memory_runs loader database hooks
-
-// Commit 13: Implement clear_memory_runs user interaction prompt
-
-// Commit 14: Adjust active styles on sandbox button clicks
