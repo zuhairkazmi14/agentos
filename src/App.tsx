@@ -1050,3 +1050,5 @@ Secure execution guidelines complied.`
 // Commit 12: Wire get_memory_runs loader database hooks
 
 // Commit 13: Implement clear_memory_runs user interaction prompt
+
+// Commit 14: Adjust active styles on sandbox button clicks
