@@ -1028,3 +1028,5 @@ Secure execution guidelines complied.`
 // Commit 1: Initialize custom Lucide icons imports for ecosystem vaults
 
 // Commit 2: Add memory search filters and marketplace state interfaces
+
+// Commit 3: Add new active tabs selectors (demo, memory, marketplace)
