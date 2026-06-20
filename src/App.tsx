@@ -1042,3 +1042,5 @@ Secure execution guidelines complied.`
 // Commit 8: Wire workspace header packs count badge
 
 // Commit 9: Hook local storage key save handlers
+
+// Commit 10: Wire list_marketplace_packs loader hooks
