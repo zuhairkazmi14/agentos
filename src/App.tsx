@@ -1044,3 +1044,5 @@ Secure execution guidelines complied.`
 // Commit 9: Hook local storage key save handlers
 
 // Commit 10: Wire list_marketplace_packs loader hooks
+
+// Commit 11: Wire toggle_marketplace_pack installer hooks
