@@ -1040,3 +1040,5 @@ Secure execution guidelines complied.`
 // Commit 7: Setup state hook variables memoryRuns, selectedRunId, etc.
 
 // Commit 8: Wire workspace header packs count badge
+
+// Commit 9: Hook local storage key save handlers
