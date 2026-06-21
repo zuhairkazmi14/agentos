@@ -1440,3 +1440,5 @@ Secure execution guidelines complied.`
     </div>
   );
 }
+
+// Commit 4: WorkspaceHeader count badge state integration
