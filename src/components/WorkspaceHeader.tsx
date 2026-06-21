@@ -146,3 +146,5 @@ export const WorkspaceHeader: React.FC<WorkspaceHeaderProps> = ({
     </div>
   );
 };
+
+// prop documentation: installedPacksCount tracks installed packages
