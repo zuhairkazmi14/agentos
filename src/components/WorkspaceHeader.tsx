@@ -148,3 +148,5 @@ export const WorkspaceHeader: React.FC<WorkspaceHeaderProps> = ({
 };
 
 // prop documentation: installedPacksCount tracks installed packages
+
+// Render active badge indicators
