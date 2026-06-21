@@ -4,3 +4,5 @@
 - Phase 2: Local Memory Vault database (in progress)
 - Memory Vault: LanceDB file-storage JSON DB
 
+- Marketplace: WASM-isolated sandbox capability packages
+
