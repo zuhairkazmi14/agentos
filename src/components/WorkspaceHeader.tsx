@@ -9,6 +9,7 @@ interface WorkspaceHeaderProps {
   activeAgent: string | null;
   activeModel: string;
   onOpenSettings: () => void;
+  installedPacksCount?: number;
 }
 
 export const WorkspaceHeader: React.FC<WorkspaceHeaderProps> = ({
@@ -19,6 +20,7 @@ export const WorkspaceHeader: React.FC<WorkspaceHeaderProps> = ({
   activeAgent,
   activeModel,
   onOpenSettings,
+  installedPacksCount,
 }) => {
   const getAgentColor = (agent: string | null) => {
     switch (agent?.toLowerCase()) {
@@ -103,6 +105,13 @@ export const WorkspaceHeader: React.FC<WorkspaceHeaderProps> = ({
             <Shield className="w-3.5 h-3.5 text-emerald-500" style={{ color: '#10b981' }} />
             <span className="text-[10px] text-emerald-400 font-medium" style={{ color: '#34d399' }}>SECURE (LOCAL KEYCHAIN)</span>
           </div>
+
+          {/* Active Sandbox / Packs Indicator */}
+          {installedPacksCount !== undefined && installedPacksCount > 0 && (
+            <div className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border border-indigo-500/10 bg-indigo-500/5" style={{ border: '1px solid rgba(99, 102, 241, 0.1)', backgroundColor: 'rgba(99, 102, 241, 0.05)' }}>
+              <span className="text-[10px] text-indigo-400 font-medium" style={{ color: '#a5b4fc' }}>{installedPacksCount} PACKS ACTIVE</span>
+            </div>
+          )}
 
           {/* Settings Button */}
           <button 
