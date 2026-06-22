@@ -518,6 +518,17 @@ Secure execution guidelines complied.`
               Marketplace
             </button>
 
+            <button
+              onClick={() => setActiveTab('security_center')}
+              className={`flex items-center gap-2.5 w-full text-left px-2.5 py-2 rounded-lg text-xs font-semibold cursor-pointer transition-all ${
+                activeTab === 'security_center' ? 'bg-[#18181b] text-indigo-300 border border-[#27272a]' : 'text-[#a1a1aa] hover:bg-[#0f0f13] hover:text-[#fafafa]'
+              }`}
+              style={activeTab === 'security_center' ? { backgroundColor: '#18181b', color: '#a5b4fc', border: '1px solid #27272a' } : {}}
+            >
+              <Shield className="w-4 h-4" />
+              Security Center
+            </button>
+
             <div className="h-[1px] bg-[#27272a] my-2" />
             <div className="text-[9px] text-[#71717a] font-semibold tracking-wider uppercase px-2 py-1.5">Teardown Playbook</div>
 
@@ -548,7 +559,7 @@ Secure execution guidelines complied.`
         {/* Footer info */}
         <div className="p-3 border-t border-[#27272a] text-[10px] text-[#71717a] flex flex-col gap-1" style={{ borderTop: '1px solid #27272a' }}>
           <div>Model-neutral Agent kernel</div>
-          <a href="https://github.com/agentos-project/agentos" target="_blank" rel="noreferrer" className="text-indigo-400 hover:underline">GitHub Project Gåù</a>
+          <a href="https://github.com/agentos-project/agentos" target="_blank" rel="noreferrer" className="text-indigo-400 hover:underline">GitHub Project â†—</a>
         </div>
       </div>
 
@@ -556,7 +567,7 @@ Secure execution guidelines complied.`
       <div className="flex-1 flex flex-col overflow-hidden bg-[#09090b]">
         
         {/* Playbook tabs panels */}
-        {activeTab !== 'demo' && activeTab !== 'memory' && activeTab !== 'marketplace' ? (
+        {activeTab !== 'demo' && activeTab !== 'memory' && activeTab !== 'marketplace' && activeTab !== 'security_center' ? (
           <div className="flex-1 overflow-y-auto p-6 max-w-4xl mx-auto w-full">
             
             {activeTab === 'vision' && (
@@ -566,7 +577,7 @@ Secure execution guidelines complied.`
                   <h1 className="text-2xl font-bold mt-1 mb-2">Category Claim: Own the Kernel Layer</h1>
                   <p className="text-sm text-[#a1a1aa] leading-relaxed">
                     Model providers are vertically integrated toward the end-user and will never build a neutral orchestration kernel. OpenAI Operator works for OpenAI models. Claude Computer Use works for Anthropic models. Google Mariner works for Gemini. 
-                    <strong> AgentOS is the model-neutral runtime</strong> GÇö the operating layer underneath every desktop agent.
+                    <strong> AgentOS is the model-neutral runtime</strong> â€” the operating layer underneath every desktop agent.
                   </p>
                 </div>
 
@@ -577,7 +588,7 @@ Secure execution guidelines complied.`
                   </div>
                   <div className="p-4 rounded-xl border border-emerald-500/10 bg-emerald-500/5" style={{ border: '1px solid rgba(16, 185, 129, 0.1)', backgroundColor: 'rgba(16, 185, 129, 0.05)' }}>
                     <h3 className="text-sm font-semibold text-emerald-400 mb-2 flex items-center gap-1.5"><Check className="w-4 h-4" /> Upgraded Vision</h3>
-                    <p className="text-xs text-[#a1a1aa] leading-relaxed">"AgentOS is the model-neutral agent kernel for desktop GÇö the operating layer that lets any AI model control any computer, at any cost, without vendor lock-in."</p>
+                    <p className="text-xs text-[#a1a1aa] leading-relaxed">"AgentOS is the model-neutral agent kernel for desktop â€” the operating layer that lets any AI model control any computer, at any cost, without vendor lock-in."</p>
                   </div>
                 </div>
 
@@ -624,19 +635,19 @@ Secure execution guidelines complied.`
                 <div className="relative border-l border-[#27272a] pl-6 ml-3 flex flex-col gap-6" style={{ borderLeft: '1px solid #27272a' }}>
                   <div className="relative">
                     <div className="absolute -left-[30px] w-4 h-4 rounded-full bg-indigo-500 border border-indigo-600 flex items-center justify-center text-[10px] font-bold text-white">1</div>
-                    <h3 className="text-sm font-semibold text-white">Phase 1: Kernel MVP (Months 1GÇô4)</h3>
+                    <h3 className="text-sm font-semibold text-white">Phase 1: Kernel MVP (Months 1â€“4)</h3>
                     <p className="text-xs text-[#a1a1aa] mt-1">Development Workspace only. 4 core agents (Architect, Backend, Frontend, QA). WebSocket real-time communication graph. Visual cost tracking widgets.</p>
                   </div>
 
                   <div className="relative">
                     <div className="absolute -left-[30px] w-4 h-4 rounded-full bg-[#18181b] border border-[#27272a] flex items-center justify-center text-[10px] font-bold text-[#71717a]">2</div>
-                    <h3 className="text-sm font-semibold text-white">Phase 2: Ecosystem (Months 5GÇô9)</h3>
+                    <h3 className="text-sm font-semibold text-white">Phase 2: Ecosystem (Months 5â€“9)</h3>
                     <p className="text-xs text-[#a1a1aa] mt-1">Open the Agent Pack API. Seed with 10 hand-built packs (Research, Writing, Finance). Integrate browser automation via Playwright sandbox. Session memory layers.</p>
                   </div>
 
                   <div className="relative">
                     <div className="absolute -left-[30px] w-4 h-4 rounded-full bg-[#18181b] border border-[#27272a] flex items-center justify-center text-[10px] font-bold text-[#71717a]">3</div>
-                    <h3 className="text-sm font-semibold text-white">Phase 3: Platform OS (Months 10GÇô18)</h3>
+                    <h3 className="text-sm font-semibold text-white">Phase 3: Platform OS (Months 10â€“18)</h3>
                     <p className="text-xs text-[#a1a1aa] mt-1">Full OS metaphor with workspaces. Agent-to-agent delegation. Full computer filesystem control, native apps integrations, enterprise dashboards, SSO & audits.</p>
                   </div>
                 </div>
@@ -843,7 +854,7 @@ Secure execution guidelines complied.`
                   <span className="text-[10px] text-indigo-400 font-semibold tracking-wider uppercase">playbook review</span>
                   <h1 className="text-2xl font-bold mt-1 mb-2">Verdict: Build the MVP</h1>
                   <p className="text-sm text-[#a1a1aa] leading-relaxed">
-                    By implementing the specific upgrades outlined GÇö the model neutral scheduler, local-first safety, BYOK pricing, and the developer pack API GÇö AgentOS establishes a structural moat that model providers cannot copy without harming their core businesses.
+                    By implementing the specific upgrades outlined â€” the model neutral scheduler, local-first safety, BYOK pricing, and the developer pack API â€” AgentOS establishes a structural moat that model providers cannot copy without harming their core businesses.
                   </p>
                 </div>
 
@@ -1152,7 +1163,7 @@ Secure execution guidelines complied.`
               })()}
             </div>
           </div>
-        ) : (
+        ) : activeTab === 'marketplace' ? (
           /* Marketplace Workspace */
           <div className="flex-1 flex flex-col overflow-hidden">
             {/* Marketplace Header */}
@@ -1291,6 +1302,161 @@ Secure execution guidelines complied.`
                       </div>
                     </div>
                   ))}
+              </div>
+            </div>
+          </div>
+        ) : (
+          /* Security Center Workspace */
+          <div className="flex-1 flex flex-col overflow-hidden">
+            {/* Security Center Header */}
+            <div className="glass border-b border-[#27272a] p-4 flex justify-between items-center bg-[#09090b]">
+              <div>
+                <h1 className="text-base font-bold text-white flex items-center gap-2">
+                  <Shield className="w-4 h-4 text-indigo-400" />
+                  Kernel Security Guard & Auditing
+                </h1>
+                <p className="text-xs text-[#a1a1aa] mt-0.5">Manage the local execution sandbox configurations and Principle of Least Privilege allowances.</p>
+              </div>
+              <div className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border border-emerald-500/10 bg-emerald-500/5 font-semibold">
+                <span className="relative flex h-2 w-2">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
+                </span>
+                <span className="text-[10px] text-emerald-400 font-bold font-mono">FIREWALL ONLINE</span>
+              </div>
+            </div>
+
+            {/* Content area */}
+            <div className="flex-1 overflow-y-auto p-6 max-w-5xl mx-auto w-full flex flex-col gap-6">
+              {/* Row 1: Health Score and Firewall Policy switches */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                
+                {/* Visual Security Rating Dial */}
+                <div className="glass rounded-xl p-5 bg-[#0f0f13] border border-[#27272a] flex flex-col items-center justify-center text-center">
+                  <div className="text-[10px] text-[#71717a] font-bold uppercase tracking-wider mb-2">Sandbox Trust Rating</div>
+                  <div className="relative w-28 h-28 flex items-center justify-center">
+                    {/* SVG Progress Circle */}
+                    <svg className="w-full h-full transform -rotate-90">
+                      <circle cx="56" cy="56" r="46" stroke="#18181b" strokeWidth="6" fill="transparent" />
+                      <circle cx="56" cy="56" r="46" stroke="#10b981" strokeWidth="6" fill="transparent" strokeDasharray="289" strokeDashoffset="12" strokeLinecap="round" />
+                    </svg>
+                    <div className="absolute flex flex-col items-center justify-center">
+                      <span className="text-2xl font-extrabold text-white">9.8</span>
+                      <span className="text-[8px] text-[#71717a] font-mono mt-0.5">MAX 10.0</span>
+                    </div>
+                  </div>
+                  <div className="text-[10px] text-emerald-400 font-semibold mt-3">Principle of Least Privilege Enforced</div>
+                </div>
+
+                {/* Policy toggles */}
+                <div className="glass rounded-xl p-5 bg-[#0f0f13] border border-[#27272a] md:col-span-2 flex flex-col justify-between">
+                  <div>
+                    <h3 className="text-xs font-bold text-white uppercase tracking-wider mb-3">Kernel Security Policies</h3>
+                    <div className="flex flex-col gap-3">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <h4 className="text-xs font-semibold text-white">Prompt Injection Classifier</h4>
+                          <p className="text-[10px] text-[#a1a1aa] mt-0.5">Filter inbound external web context contents locally using custom embeddings before context insertion.</p>
+                        </div>
+                        <div className="w-9 h-5 bg-indigo-600 rounded-full p-0.5 cursor-pointer flex justify-end">
+                          <div className="w-4 h-4 bg-white rounded-full" />
+                        </div>
+                      </div>
+
+                      <div className="flex items-center justify-between border-t border-[#27272a] pt-3">
+                        <div>
+                          <h4 className="text-xs font-semibold text-white">Command Execution Sandbox Allowlist</h4>
+                          <p className="text-[10px] text-[#a1a1aa] mt-0.5">Validate terminal CLI commands against the system allowlist before launching task subprocesses.</p>
+                        </div>
+                        <div className="w-9 h-5 bg-indigo-600 rounded-full p-0.5 cursor-pointer flex justify-end">
+                          <div className="w-4 h-4 bg-white rounded-full" />
+                        </div>
+                      </div>
+
+                      <div className="flex items-center justify-between border-t border-[#27272a] pt-3">
+                        <div>
+                          <h4 className="text-xs font-semibold text-white">WASM Sandbox Egress Limits</h4>
+                          <p className="text-[10px] text-[#a1a1aa] mt-0.5">Enforce capability boundaries preventing direct write access outside workspace directories.</p>
+                        </div>
+                        <div className="w-9 h-5 bg-indigo-600 rounded-full p-0.5 cursor-pointer flex justify-end">
+                          <div className="w-4 h-4 bg-white rounded-full" />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Row 2: Audit Action Log */}
+              <div className="glass rounded-xl p-5 bg-[#0f0f13] border border-[#27272a]">
+                <h3 className="text-xs font-bold text-white uppercase tracking-wider mb-3 flex items-center gap-1.5">
+                  <Terminal className="w-4 h-4 text-indigo-400" />
+                  Kernel Intercept Audit Ledger
+                </h3>
+                <div className="overflow-x-auto mt-2">
+                  <table className="w-full text-left text-xs border-collapse">
+                    <thead>
+                      <tr className="border-b border-[#27272a] text-[#71717a]">
+                        <th className="py-2 font-semibold">Time</th>
+                        <th className="py-2 font-semibold">Agent</th>
+                        <th className="py-2 font-semibold">Operation</th>
+                        <th className="py-2 font-semibold">Target / Resource</th>
+                        <th className="py-2 font-semibold">Status</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {[
+                        { time: '10:24:12', agent: 'Backend', op: 'fs:write', target: 'app.js', status: 'APPROVED', style: 'text-emerald-400 bg-emerald-500/10 border-emerald-500/20' },
+                        { time: '10:24:13', agent: 'Backend', op: 'exec:command', target: 'git commit -m "update"', status: 'APPROVED', style: 'text-emerald-400 bg-emerald-500/10 border-emerald-500/20' },
+                        { time: '10:24:18', agent: 'QA Auditor', op: 'network:egress', target: 'api.openai.com', status: 'APPROVED', style: 'text-emerald-400 bg-emerald-500/10 border-emerald-500/20' },
+                        { time: '10:24:20', agent: 'QA Auditor', op: 'network:egress', target: 'adversarial-payload.ru', status: 'BLOCKED', style: 'text-red-400 bg-red-500/10 border-red-500/20' },
+                        { time: '10:24:22', agent: 'Architect', op: 'fs:read', target: 'c:/Users/Zuhair Kazmi/Downloads/agentOS/package.json', status: 'APPROVED', style: 'text-emerald-400 bg-emerald-500/10 border-emerald-500/20' },
+                        { time: '10:24:25', agent: 'Frontend', op: 'exec:command', target: 'rm -rf /', status: 'BLOCKED', style: 'text-red-400 bg-red-500/10 border-red-500/20' }
+                      ].map((item, idx) => (
+                        <tr key={idx} className="border-b border-[#27272a] hover:bg-[#18181b] transition-all">
+                          <td className="py-2.5 font-mono text-[10px] text-[#71717a]">{item.time}</td>
+                          <td className="py-2.5 font-semibold text-white">{item.agent}</td>
+                          <td className="py-2.5 font-mono text-[10px] text-[#a1a1aa]">{item.op}</td>
+                          <td className="py-2.5 text-[#a1a1aa] truncate max-w-[250px]">{item.target}</td>
+                          <td className="py-2.5">
+                            <span className={`text-[9px] font-mono px-2 py-0.5 rounded border ${item.style}`}>{item.status}</span>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              {/* Row 3: Allowlist Configurations */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {/* Trusted outbound domains */}
+                <div className="glass rounded-xl p-5 bg-[#0f0f13] border border-[#27272a]">
+                  <h4 className="text-xs font-bold text-white uppercase tracking-wider mb-2">Outbound Domain Allowlist</h4>
+                  <p className="text-[10px] text-[#71717a] mb-3">Only declared hosts can receive API payload callbacks.</p>
+                  <div className="flex flex-col gap-1.5">
+                    {['api.openai.com', 'api.anthropic.com', 'api.gemini.google.com', 'github.com', 'api.linear.app'].map(domain => (
+                      <div key={domain} className="flex justify-between items-center text-xs p-2 bg-[#09090b] border border-[#27272a] rounded">
+                        <span className="text-[#a1a1aa] font-mono">{domain}</span>
+                        <span className="text-[9px] font-semibold text-indigo-400">TRUSTED</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Sandboxed Local Paths */}
+                <div className="glass rounded-xl p-5 bg-[#0f0f13] border border-[#27272a]">
+                  <h4 className="text-xs font-bold text-white uppercase tracking-wider mb-2">Sandbox Path Subtree Allowlist</h4>
+                  <p className="text-[10px] text-[#71717a] mb-3">Filerights are constrained to verified project locations.</p>
+                  <div className="flex flex-col gap-1.5">
+                    {['c:/Users/Zuhair Kazmi/Downloads/agentOS/src/', 'c:/Users/Zuhair Kazmi/Downloads/agentOS/src-tauri/'].map(path => (
+                      <div key={path} className="flex justify-between items-center text-xs p-2 bg-[#09090b] border border-[#27272a] rounded">
+                        <span className="text-[#a1a1aa] font-mono truncate max-w-[260px]">{path}</span>
+                        <span className="text-[9px] font-semibold text-indigo-400">AUTHORIZED</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -1440,13 +1606,3 @@ Secure execution guidelines complied.`
     </div>
   );
 }
-
-// Commit 1: Initialize Security Center workspace tab hooks
-
-// Commit 2: Sidebar Security Center button layouts and styles
-
-// Commit 3: Conditional switcher view route for security
-
-// Commit 4: Policy switches for injection firewalls
-
-// Commit 5: Audit Ledger table structure definitions

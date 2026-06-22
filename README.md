@@ -5,21 +5,21 @@
 [![Version](https://img.shields.io/badge/version-0.1.0--alpha-blue.svg)]()
 [![Ecosystem](https://img.shields.io/badge/ecosystem-Agent%20Packs-teal.svg)]()
 
-> **AgentOS** is a model-neutral agent kernel for desktop GÇö the operating layer that lets any AI model control any computer, at any cost, without vendor lock-in.
+> **AgentOS** is a model-neutral agent kernel for desktop â€” the operating layer that lets any AI model control any computer, at any cost, without vendor lock-in.
 
 Unlike vertically integrated solutions that tie you to a single model provider (such as OpenAI Operator, Anthropic Computer Use, or Google Mariner), AgentOS is a neutral runtime kernel designed to run locally, schedule across heterogeneous models, and support a rich ecosystem of third-party **Agent Packs**.
 
 ---
 
-## =ƒÜÇ Key Pillars
+## ğŸš€ Key Pillars
 
-*   **=ƒöÆ Local-First Execution**: Maximum privacy and CISO-friendly security. All memory, local model coordination (via Ollama), sandboxing, and execution happen on your local machine.
-*   **GÜûn+Å Model Neutrality**: Run a single workspace with different tasks routed dynamically to their optimal models (e.g., Gemini for reasoning, Claude for coding, local Llama-3 for quick checks) based on latency, privacy, and cost.
-*   **=ƒöî Agent Pack Ecosystem**: An open-kernel API allowing developers to build and share capabilities like VS Code extensions. Start with pre-built packs or build custom agents.
+*   **ğŸ”’ Local-First Execution**: Maximum privacy and CISO-friendly security. All memory, local model coordination (via Ollama), sandboxing, and execution happen on your local machine.
+*   **âš–ï¸ Model Neutrality**: Run a single workspace with different tasks routed dynamically to their optimal models (e.g., Gemini for reasoning, Claude for coding, local Llama-3 for quick checks) based on latency, privacy, and cost.
+*   **ğŸ”Œ Agent Pack Ecosystem**: An open-kernel API allowing developers to build and share capabilities like VS Code extensions. Start with pre-built packs or build custom agents.
 
 ---
 
-## =ƒ¢án+Å Architecture Overview
+## ğŸ› ï¸ Architecture Overview
 
 AgentOS is built as a high-performance desktop application split into two primary layers:
 
@@ -49,28 +49,28 @@ graph TD
 
 ---
 
-## =ƒôé Repository Structure
+## ğŸ“‚ Repository Structure
 
 ```text
 agentOS/
-Gö£GöÇGöÇ .github/workflows/    # CI/CD Workflows (Tauri and React compilers)
-Gö£GöÇGöÇ src/                  # React Frontend (Desktop Dashboard & Workspaces)
-Göé   Gö£GöÇGöÇ assets/           # UI Icons & Assets
-Göé   Gö£GöÇGöÇ components/       # Premium React Components (Agent Graph, Code Preview)
-Göé   GööGöÇGöÇ index.css         # Styling system & Tailwind-like dark CSS
-Gö£GöÇGöÇ src-tauri/            # Tauri App Native Desktop Files
-Göé   Gö£GöÇGöÇ src/              # Rust Kernel & Command Handlers
-Göé   Gö£GöÇGöÇ Cargo.toml        # Rust Crate Metadata & dependencies
-Göé   GööGöÇGöÇ tauri.conf.json   # Tauri Application configuration
-Gö£GöÇGöÇ .env.example          # Environment variable template
-Gö£GöÇGöÇ CONTRIBUTING.md       # Development guideline for contributors
-Gö£GöÇGöÇ LICENSE               # MIT License
-GööGöÇGöÇ README.md             # This documentation
+â”œâ”€â”€ .github/workflows/    # CI/CD Workflows (Tauri and React compilers)
+â”œâ”€â”€ src/                  # React Frontend (Desktop Dashboard & Workspaces)
+â”‚   â”œâ”€â”€ assets/           # UI Icons & Assets
+â”‚   â”œâ”€â”€ components/       # Premium React Components (Agent Graph, Code Preview)
+â”‚   â””â”€â”€ index.css         # Styling system & Tailwind-like dark CSS
+â”œâ”€â”€ src-tauri/            # Tauri App Native Desktop Files
+â”‚   â”œâ”€â”€ src/              # Rust Kernel & Command Handlers
+â”‚   â”œâ”€â”€ Cargo.toml        # Rust Crate Metadata & dependencies
+â”‚   â””â”€â”€ tauri.conf.json   # Tauri Application configuration
+â”œâ”€â”€ .env.example          # Environment variable template
+â”œâ”€â”€ CONTRIBUTING.md       # Development guideline for contributors
+â”œâ”€â”€ LICENSE               # MIT License
+â””â”€â”€ README.md             # This documentation
 ```
 
 ---
 
-## =ƒôª Phase 1 MVP Features
+## ğŸ“¦ Phase 1 MVP Features
 
 The current implementation showcases the **Developer Workspace** MVP:
 1.  **Multi-Agent Coordination Panel**: Watch the 4 core agents (**Architect**, **Backend**, **Frontend**, **QA**) communicate over the WebSocket message queue in real-time.
@@ -80,7 +80,7 @@ The current implementation showcases the **Developer Workspace** MVP:
 
 ---
 
-## =ƒÆ+ Developer Quick Start
+## ğŸ’» Developer Quick Start
 
 ### Prerequisites
 *   Node.js (v18+)
@@ -120,7 +120,7 @@ The current implementation showcases the **Developer Workspace** MVP:
 
 ---
 
-## =ƒöÆ Security Posture
+## ğŸ”’ Security Posture
 
 AgentOS operates on the **Principle of Least Privilege**:
 *   **Action Log**: Immutable audit trail of every system action (terminal, browser, file writes) with user confirmation gates.
@@ -129,7 +129,7 @@ AgentOS operates on the **Principle of Least Privilege**:
 
 ---
 
-## =ƒù¦n+Å Roadmap
+## ğŸ—ºï¸ Roadmap
 
 - [x] **Phase 1: Kernel & Shell Core MVP** (Developer Workspace, 4-Agent Team, Sandbox Preview, Cost tracker).
 - [ ] **Phase 2: Agent Pack API & Marketplace** (Browser automation, Session memory, lanceDB integrations).
@@ -137,6 +137,6 @@ AgentOS operates on the **Principle of Least Privilege**:
 
 ---
 
-## =ƒôä License
+## ğŸ“„ License
 
 Distributed under the MIT License. See [LICENSE](LICENSE) for more information.
