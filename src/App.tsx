@@ -1440,3 +1440,5 @@ Secure execution guidelines complied.`
     </div>
   );
 }
+
+// Commit 1: Initialize Security Center workspace tab hooks
